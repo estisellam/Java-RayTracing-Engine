@@ -21,7 +21,7 @@ public class Vector extends Point
    }
 
 
-
+   @Override
    public Vector add(Vector vector)
    {
       return new Vector(coordinate.add(vector.coordinate));

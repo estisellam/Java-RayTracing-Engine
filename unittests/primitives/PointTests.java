@@ -51,18 +51,18 @@ class PointTests {
     @Test
     void testDistanceSquared()
     {
-        //=============TC01:Test distance squared between two points =============//
+        //=============TC01:Test distance squared between two points with positive numbers =============//
         Point p1= new Point(1, 2, 3);
         Point p2= new Point(4, 5, 6);
         double d1=p1.distanceSquared(p2);
         double d2=27;
         assertEquals(d1, d2,"Distance squared() wrong result");
 
-        //=============TC02:Test distance squared between two points =============//
-        Point p3= new Point(0, 0, 0);
-        Point p4= new Point(0, 0, 0);
+        //=============TC02:Test distance squared between two points with negtive numbers =============//
+        Point p3= new Point(-1, 3, 4);
+        Point p4= new Point(2, -3, -7);
         double d3=p3.distanceSquared(p4);
-        double d4=0;
+        double d4=(-3)*(-3)+6*6+11*11;
         assertEquals(d3, d4,"Distance squared() wrong result");
     }
 

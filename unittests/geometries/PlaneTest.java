@@ -7,13 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for {@link geometries.Plane} class
  */
-class PlaneTests {
+class PlaneTests
+{
 
     /**
      * Test method for {@link geometries.Plane#Plane(Point, Point, Point)}
      */
     @Test
-    void testConstructorWithThreePoints() {
+    void testConstructorWithThreePoints()
+    {
         // ============ TC01: Valid plane with non-collinear points ============= //
         Point p1 = new Point(0, 0, 0);
         Point p2 = new Point(1, 0, 0);
@@ -27,7 +29,7 @@ class PlaneTests {
             new Plane(p1, p2, p4);
         }, "Expected IllegalArgumentException when points are collinear.");
 
-        // ============ TC03: Points are on the same line (degenerate case) ============= //
+        // ============ TC03: Points are on the same line  ============= //
         Point p5 = new Point(3, 3, 0);
         assertThrows(IllegalArgumentException.class, () -> {
             new Plane(p1, p2, p5);
@@ -38,7 +40,8 @@ class PlaneTests {
      * Test method for {@link geometries.Plane#Plane(Point, Vector)}
      */
     @Test
-    void testConstructorWithPointAndVector() {
+    void testConstructorWithPointAndVector()
+    {
         // ============ TC01: Valid plane ============= //
         Point p1 = new Point(0, 0, 0);
         Vector normal = new Vector(1, 0, 0);

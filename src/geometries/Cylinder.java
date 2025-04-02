@@ -13,19 +13,20 @@ public class Cylinder extends Tube {
 
    /**
     * constructor with ray, radius and height
+    *
     * @param axisRay
     * @param radius
     * @param height
     */
-   public Cylinder(Ray axisRay, double radius, double height)
-   {
-      super(axisRay._p0,axisRay._dir, radius);
+   public Cylinder(Ray axisRay, double radius, double height) {
+      super(axisRay._p0, axisRay._dir, radius);
       this.height = height;
    }
 
 
    /**
     * func to get normal
+    *
     * @param point
     * @return
     */
@@ -33,5 +34,9 @@ public class Cylinder extends Tube {
    public Vector getNormal(Point point) {
       return null;
    }
-
 }
+
+
+
+
+

@@ -8,7 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for {@link geometries.Plane} class.
  */
-class PlaneTests {
+class PlaneTests
+{
+    /**
+     * Delta value for accuracy when comparing the numbers of type 'double' in
+     * assertEquals
+     */
+    private static final double DELTA = 0.000001;
 
     /**
      * Test method for {@link geometries.Plane#Plane(Point, Point, Point)}.
@@ -65,11 +71,31 @@ class PlaneTests {
      * Test method for {@link geometries.Plane#Plane(Point, Vector)}.
      */
     @Test
-    void testConstructorWithPointAndVector() {
+    void testConstructorWithPointAndVector()
+    {
         //=============TC01: Create a plane with a valid point and normal vector =============//
         Point p1 = new Point(0, 0, 0);
         Vector normal = new Vector(1, 0, 0);
         Plane plane = new Plane(p1, normal);
         assertNotNull(plane, "Plane should be created with a valid point and normal vector.");
     }
+    /**
+     * Test method for {@link geometries.Plane#getNormal(primitives.Point)}.
+     */
+    @Test
+    void testGetNormal() {
+        // ============ Equivalence Partition Tests ==============
+        // TC01: Normal of a simple plane
+        Point p1 = new Point(0, 0, 0);
+        Point p2 = new Point(1, 0, 0);
+        Point p3 = new Point(0, 1, 0);
+        Plane plane = new Plane(p1, p2, p3);
+
+        assertDoesNotThrow(() -> plane.getNormal(p1), "No exception expected for getNormal method on Plane");
+        Vector result = plane.getNormal(p1);
+        assertEquals(1, result.length(), DELTA, "Plane normal is not a unit vector");
+        assertEquals(0d, result.dotProduct(p2.subtract(p1)), DELTA, "Plane normal is not orthogonal to the edge");
+        assertEquals(0d, result.dotProduct(p3.subtract(p1)), DELTA, "Plane normal is not orthogonal to the edge");
+    }
+
 }

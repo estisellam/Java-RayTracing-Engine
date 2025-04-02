@@ -52,7 +52,7 @@ class PolygonTests {
         // =============== Boundary Values Tests ==================
 
         // TC10: Vertex on a side of a quadrangular
-        assertThrows(IllegalArgumentException.class, //
+        assertThrows(IllegalArgumentException.class,
                 () -> new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0),
                         new Point(0, 0.5, 0.5)),
                 "Constructed a polygon with vertix on a side");
@@ -82,10 +82,10 @@ class PolygonTests {
         // generate the test result
         Vector result = pol.getNormal(new Point(0, 0, 1));
         // ensure |result| = 1
-        assertEquals(1, result.length(), DELTA, "Polygon's normal is not a unit vector");
+        assertEquals(1, result.length(), DELTA, "Polygon normal is not a unit vector");
         // ensure the result is orthogonal to all the edges
         for (int i = 0; i < 3; ++i)
             assertEquals(0d, result.dotProduct(pts[i].subtract(pts[i == 0 ? 3 : i - 1])), DELTA,
-                    "Polygon's normal is not orthogonal to one of the edges");
+                    "Polygon normal is not orthogonal to one of the edges");
     }
 }

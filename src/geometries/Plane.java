@@ -29,7 +29,8 @@ public class Plane extends Geometry
       Vector b = z.subtract(x);
 
       // Check if points are collinear
-      if (a.crossProduct(b).length() == 0) {
+      if (a.crossProduct(b).length() == 0)
+      {
          throw new IllegalArgumentException("The points are collinear and do not define a valid plane.");
       }
 
@@ -45,6 +46,15 @@ public class Plane extends Geometry
    {
       point = x;
       normal = a.normalize();
+   }
+
+   /**
+    * func get for point
+    * @return
+    */
+   public Point getPoint()
+   {
+        return point;
    }
 
    /**

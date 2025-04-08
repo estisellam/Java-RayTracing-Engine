@@ -7,26 +7,21 @@ import primitives.*;
 public class Tube extends RadialGeometry
 {
    /**
-    * center of the tube
+    * ray of the main axis of the tube
     */
-   protected Point center;
-   /**
-    * direction of the tube
-    */
-   protected Vector direction;
+   protected final Ray mainAxis;
 
    /**
-    * constructor with 3 points for a tube
-    * @param x
-    * @param a
-    * @param y
+    * constructor
+    * @param x - radius
+    * @param y - ray
     */
-   public Tube(Point x, Vector a, double y)
+   public Tube(double x, Ray y)
    {
-      super(y);
-      center = x;
-      direction = a.normalize();
-      radius = y;
+      super(x);
+        if (y == null)
+             throw new IllegalArgumentException("Error: ray cannot be null.");
+        mainAxis =y;
    }
 
    /**
@@ -35,9 +30,14 @@ public class Tube extends RadialGeometry
     * @return
     */
    @Override
-   public Vector getNormal(Point x)
-   {
-      return null;
-
+   public Vector getNormal(Point x) {
+      double a = (x.getX() - mainAxis.getHead().getX()) * mainAxis.getDirection().getX() +
+                 (x.getY() - mainAxis.getHead().getY()) * mainAxis.getDirection().getY() +
+                 (x.getZ() - mainAxis.getHead().getZ()) * mainAxis.getDirection().getZ();
+      Point projected = mainAxis.getPoint(a);
+      Vector normal = x.subtract(projected);
+      return normal.normalize();
    }
+
+
 }

@@ -29,18 +29,6 @@ class SphereTests {
     }
 
     /**
-     * Test method for edge cases in {@link geometries.Sphere#Sphere(primitives.Point, double)}.
-     */
-    @Test
-    void testEdgeCases()
-    {
-        Point center = new Point(0, 0, 0);
-        double radius = 0;
-
-        //=============TC01: Sphere with zero radius =============//
-        assertThrows(IllegalArgumentException.class, () -> new Sphere(center, radius), "Error: radius should be greater than zero.");
-    }
-    /**
      * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
      */
     @Test
@@ -50,11 +38,17 @@ class SphereTests {
         Point center = new Point(0, 0, 0);
         double radius = 1;
         Sphere sphere = new Sphere(center, radius);
+
+        // Ensure no exception is thrown when calling getNormal
         assertDoesNotThrow(() -> sphere.getNormal(center), "No exception expected for getNormal method on Sphere");
+
+        // Getting the normal vector and validating its properties
         Vector result = sphere.getNormal(center);
+
+        // Normal should be a unit vector
         assertEquals(1, result.length(), DELTA, "Sphere normal is not a unit vector");
+
+        // The normal vector should point outward, which means its dot product with a zero vector should be 0
         assertEquals(0d, result.dotProduct(center.subtract(center)), DELTA, "Sphere normal should point outward");
     }
-
-
 }

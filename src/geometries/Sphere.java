@@ -26,6 +26,15 @@ public class Sphere extends RadialGeometry
    }
 
    /**
+    * func get for center
+    * @return
+    */
+   public Point getCenter()
+   {
+      return center;
+   }
+
+   /**
     * func get for normal
     * @param point
     * @return
@@ -33,7 +42,7 @@ public class Sphere extends RadialGeometry
    @Override
    public Vector getNormal(Point point)
    {
-      return null;
+      return point.subtract(center).normalize();
    }
 
    /**

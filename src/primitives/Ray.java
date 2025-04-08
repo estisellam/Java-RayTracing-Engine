@@ -8,53 +8,87 @@ public class Ray
    /**
     * point of origin
     */
-   public final Point _p0;
+   private final Point head;
    /**
     * direction of the ray
     */
-   public final Vector _dir;
+   private final Vector direction;
 
    /**
     * constructor with point and vector
-    * @param p0
-    * @param dir
+    * @param a
+    * @param b
     */
-   public Ray(Point p0, Vector dir) {
-      _p0 = p0;
-      _dir = dir.normalize();
+   public Ray(Point a, Vector b) {
+      head = a;
+      direction = b.normalize();
    }
+
+   /**
+    The `getPoint(double a)` method returns a point on a line starting at `origin` and going in the direction of `direction`
+    . The point is calculated based on the value of `a`, which controls how far along the line the point is. If there is a problem
+    (like `null` or an error), it returns the `origin` point instead.
+    * @return
+    */
+   public Point getPoint(double a)
+   {
+      try
+      {
+         return head.add(direction.scale(a));
+      }
+      catch(Exception e)
+      {
+            return head;
+      }
+   }
+   /**
+    * getter for the head
+    * @return
+    */
+
+   public Point getHead()
+   {
+      return head;
+   }
+
+   /**
+    * getter for the direction
+    * @return
+    */
+    public Vector getDirection()
+    {
+        return direction;
+    }
 
    /**
     * ovveride equals func
     * @param object
     * @return
     */
-   public boolean equals(Object object) {
+   public boolean equals(Object object)
+   {
       if (!(object instanceof Ray)) return false;
       if (!super.equals(object)) return false;
       Ray ray = (Ray) object;
-      return java.util.Objects.equals(_p0, ray._p0) && java.util.Objects.equals(_dir, ray._dir);
+      return java.util.Objects.equals(head, ray.head) && java.util.Objects.equals(direction, ray.direction);
    }
 
    /**
     * ovveride hashcode func
     * @return
     */
-
-   public int hashCode() {
-      return java.util.Objects.hash(super.hashCode(), _p0, _dir);
+   public int hashCode()
+   {
+      return head.hashCode() + direction.hashCode();
    }
-
    /**
     * ovveride tostring func
     * @return
     */
    @Override
-   public String toString() {
-      return "primitives.Ray{" +
-              "_p0=" + _p0 +
-              ", _dir=" + _dir +
-              '}';
+   public String toString()
+   {
+      return "primitives.Ray{" + "head=" + head + "direction=" + direction + '}';
    }
 
 }

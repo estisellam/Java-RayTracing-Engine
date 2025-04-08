@@ -77,8 +77,16 @@ public class Polygon extends Geometry {
       }
    }
 
+   /**
+    * get normal func
+    * @param point
+    * @return
+    */
    @Override
-   public Vector getNormal(Point point) { return null; }
+   public Vector getNormal(Point point)
+   {
+      return plane.getNormal(point);
+   }
 
 
 }

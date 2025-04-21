@@ -1,6 +1,9 @@
 package geometries;
 import primitives.Vector;
-import primitives.Point;
+import primitives.*;
+
+import java.util.Collections;
+import java.util.List;
 
 
 
@@ -16,8 +19,8 @@ public class Sphere extends RadialGeometry
 
    /**
     * constructor with point, radius and sphere
-    * @param center
-    * @param radius
+    * @param center point of the sphere
+    * @param radius radius of the sphere
     */
    public Sphere(Point center, double radius)
    {
@@ -27,7 +30,7 @@ public class Sphere extends RadialGeometry
 
    /**
     * func get for center
-    * @return
+    * @return center
     */
    public Point getCenter()
    {
@@ -36,8 +39,8 @@ public class Sphere extends RadialGeometry
 
    /**
     * func get for normal
-    * @param point
-    * @return
+    * @param point point on the sphere
+    * @return normal vector
     */
    @Override
    public Vector getNormal(Point point)
@@ -46,14 +49,25 @@ public class Sphere extends RadialGeometry
    }
 
    /**
-    * ovveride tostring func
-    * @return
+    * toString function
+    * @return string representation of the sphere
     */
    @Override
-   public String toString() {
-      return "Sphere{" +
-              "_center=" + center +
-              ", _radius=" + radius +
-              '}';
+   public String toString()
+   {
+      return "Sphere:" + "center:" + center + "radius:" + radius;
    }
+
+   /**
+    * find intersections with a ray
+    * @param ray the ray to find intersections with
+    * @return a list of intersection points
+    */
+   @Override
+   public List<Point> findIntersections(Ray ray)
+   {
+      return null;
+   }
+
+
 }

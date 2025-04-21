@@ -1,6 +1,9 @@
 package geometries;
 import primitives.*;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * class to represent a plane
  */
@@ -17,9 +20,9 @@ public class Plane extends Geometry
 
    /**
     * constructor with 3 points for a plane
-    * @param x
-    * @param y
-    * @param z
+    * @param x point on the plane
+    * @param y point on the plane
+    * @param z point on the plane
     * @throws IllegalArgumentException if points are collinear or the normal vector length is zero
     */
    public Plane(Point x, Point y, Point z) throws IllegalArgumentException
@@ -39,8 +42,8 @@ public class Plane extends Geometry
 
    /**
     * constructor with point and vector for a plane
-    * @param x
-    * @param a
+    * @param x point on the plane
+    * @param a point on the plane
     */
    public Plane(Point x, Vector a)
    {
@@ -50,7 +53,7 @@ public class Plane extends Geometry
 
    /**
     * func get for point
-    * @return
+    * @return point
     */
    public Point getPoint()
    {
@@ -59,12 +62,44 @@ public class Plane extends Geometry
 
    /**
     * func get for normal
-    * @param p
-    * @return
+    * @param p point on the plane
+    * @return the normal vector of the plane
     */
    @Override
    public Vector getNormal(Point p)
    {
       return normal;
    }
+   @Override
+    public String toString() {
+        return "Plane{" +
+                  "point:" + point +
+                  "normal:" + normal +
+                  '}';
+    }
+    @Override
+    public boolean equals(Object object)
+    {
+        if (!(object instanceof Plane plane)) return false;
+        if (!super.equals(object)) return false;
+        return java.util.Objects.equals(point, plane.point) && java.util.Objects.equals(normal, plane.normal);
+    }
+    @Override
+    public int hashCode()
+    {
+        return point.hashCode() + normal.hashCode();
+    }
+
+   /**
+    * find intersections with a ray
+    * @param ray the ray to find intersections with
+    * @return a list of intersection points or null if no intersections
+    */
+    @Override
+    public List<Point> findIntersections(Ray ray)
+    {
+       return null;
+
+    }
+
 }

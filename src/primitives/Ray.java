@@ -32,14 +32,7 @@ public class Ray
     */
    public Point getPoint(double a)
    {
-      try
-      {
          return head.add(direction.scale(a));
-      }
-      catch(Exception e)
-      {
-            return head;
-      }
    }
    /**
     * getter for the head

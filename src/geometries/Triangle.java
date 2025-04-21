@@ -1,5 +1,6 @@
 package geometries;
-import primitives.Point;
+import primitives.*;
+import java.util.List;
 
 /**
  * class to represent a triangle
@@ -15,5 +16,16 @@ public class Triangle extends Polygon
     public Triangle(Point x, Point y, Point z)
     {
         super(x, y, z);
+    }
+
+    /**
+     * func for find intersections when given a ray
+     * @param ray the ray to find intersections with
+     * @return list of points of intersection or null if no intersection
+     */
+    @Override
+    public List<Point> findIntersections(Ray ray)
+    {
+        return null;
     }
 }

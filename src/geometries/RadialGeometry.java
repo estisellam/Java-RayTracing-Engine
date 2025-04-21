@@ -12,7 +12,7 @@ public abstract class RadialGeometry extends Geometry
 
    /**
     * constructor with a radius
-    * @param a
+    * @param a radius of the radial geometry
     */
    public RadialGeometry(double a)
    {
@@ -23,7 +23,7 @@ public abstract class RadialGeometry extends Geometry
 
    /**
     * func get for radius
-    * @return
+    * @return radius
     */
    public double getRadius()
    {

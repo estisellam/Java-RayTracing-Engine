@@ -79,14 +79,26 @@ public class Polygon extends Geometry {
 
    /**
     * get normal func
-    * @param point
-    * @return
+    * @param point point on the polygon
+    * @return normal vector
     */
    @Override
    public Vector getNormal(Point point)
    {
       return plane.getNormal(point);
    }
+
+   /**
+    * find intersections func
+    * @param ray the ray to find intersections with
+    * @return a list of intersection points or null if there are no intersections
+    */
+   @Override
+   public List<Point> findIntersections(Ray ray)
+   {
+     return null;
+   }
+
 
 
 }

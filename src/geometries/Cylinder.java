@@ -1,12 +1,10 @@
 package geometries;
-
 import primitives.Point;
 import primitives.Vector;
-
 import primitives.Ray;
-
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+import java.util.List;
 
 /**
  * class to represent a cylinder
@@ -63,6 +61,17 @@ public class Cylinder extends Tube
       // side
       Point o = mainAxis.getPoint(t);
       return point.subtract(o).normalize();
+   }
+
+   /**
+    * func to get intersections with a ray
+    * @param ray the ray to find intersections with
+    * @return a list of intersection points or null if no intersections
+    */
+   @Override
+   public List<Point> findIntersections(Ray ray)
+   {
+      return null;
    }
 
 }

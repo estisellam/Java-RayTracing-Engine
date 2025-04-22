@@ -32,6 +32,11 @@ public class Ray
     */
    public Point getPoint(double a)
    {
+      if(a==0)
+      {
+         return head;
+      }
+      //P=P0+V*t
          return head.add(direction.scale(a));
    }
    /**

@@ -87,54 +87,56 @@ class PlaneTests {
      */
     @Test
     public void testFindIntersections() {
-        Plane plane = new Plane(new Point(0, 0, 1), new Point(1, 0, 1), new Point(0, 1, 1));
+        Plane plane = new Plane(new Point(1, 1, 2), new Point(2, 1, 2), new Point(1, 2, 2));
 
         // ============ Equivalence Partitions Tests ==============
 
         // TC01: Ray from outside, not parallel, hits the plane (1 point)
-        Ray ray1 = new Ray(new Point(0, 0, 0), new Vector(0, 0, 1));
+        Ray ray1 = new Ray(new Point(1, 1, 0), new Vector(0, 0, 1));  // הימנע מ-(0,0,0)
         List<Point> result1 = plane.findIntersections(ray1);
         assertNotNull(result1, "Ray should hit the plane");
         assertEquals(1, result1.size(), "Wrong number of points");
-        assertEquals(List.of(new Point(0, 0, 1)), result1, "Wrong intersection point");
+        assertEquals(List.of(new Point(1, 1, 2)), result1, "Wrong intersection point");
 
         // TC02: Ray from outside, not parallel, misses the plane (0 points)
-        Ray ray2 = new Ray(new Point(0, 0, 2), new Vector(0, 0, 1));
+        Ray ray2 = new Ray(new Point(0, 0, 3), new Vector(0, 0, 1));  // הימנע מ-(0,0,0)
         assertNull(plane.findIntersections(ray2), "Ray should miss the plane");
 
         // =============== Boundary Values Tests ==================
 
         // **** Group 1: Ray is parallel to plane
         // TC11: Ray is outside the plane (0 points)
-        Ray ray11 = new Ray(new Point(0, 0, 2), new Vector(1, 0, 0));
+        Ray ray11 = new Ray(new Point(1, 1, 3), new Vector(1, 0, 0));
         assertNull(plane.findIntersections(ray11), "Ray parallel and outside");
 
         // TC12: Ray is inside the plane (0 points)
-        Ray ray12 = new Ray(new Point(0.5, 0.5, 1), new Vector(1, 0, 0));
+        Ray ray12 = new Ray(new Point(1.5, 1.5, 2), new Vector(1, 0, 0));  // הימנע מ-(0,0,0)
         assertNull(plane.findIntersections(ray12), "Ray parallel and in plane");
 
         // **** Group 2: Ray is orthogonal to plane
         // TC21: Ray starts before the plane (1 point)
-        Ray ray21 = new Ray(new Point(0, 0, 0), new Vector(0, 0, 1));
+        Ray ray21 = new Ray(new Point(1, 1, 0), new Vector(0, 0, 1));  // הימנע מ-(0,0,0)
         List<Point> result21 = plane.findIntersections(ray21);
         assertNotNull(result21, "Ray orthogonal before plane");
         assertEquals(1, result21.size(), "Wrong number of points");
-        assertEquals(List.of(new Point(0, 0, 1)), result21, "Wrong intersection point");
+        assertEquals(List.of(new Point(1, 1, 2)), result21, "Wrong intersection point");
 
         // TC22: Ray starts in the plane (0 points)
-        Ray ray22 = new Ray(new Point(0, 0, 1), new Vector(0, 0, 1));
+        Ray ray22 = new Ray(new Point(1, 1, 2), new Vector(0, 0, 1));  // הימנע מ-(0,0,0)
         assertNull(plane.findIntersections(ray22), "Ray orthogonal in plane");
 
         // TC23: Ray starts after the plane (0 points)
-        Ray ray23 = new Ray(new Point(0, 0, 2), new Vector(0, 0, 1));
+        Ray ray23 = new Ray(new Point(1, 1, 3), new Vector(0, 0, 1));  // הימנע מ-(0,0,0)
         assertNull(plane.findIntersections(ray23), "Ray orthogonal after plane");
 
         // **** Group 3: Ray not parallel and not orthogonal, starts in plane (0 points)
-        Ray ray3 = new Ray(new Point(0.5, 0.5, 1), new Vector(0, 1, 1));
+        Ray ray3 = new Ray(new Point(1.5, 1.5, 2), new Vector(0, 1, 1));
         assertNull(plane.findIntersections(ray3), "Ray from in plane at angle");
 
         // **** Group 4: Ray starts at plane's base point (0 points)
-        Ray ray4 = new Ray(new Point(0, 0, 1), new Vector(1, 1, 1));
+        Ray ray4 = new Ray(new Point(1, 1, 2), new Vector(1, 1, 1));
         assertNull(plane.findIntersections(ray4), "Ray from base point at angle");
+
     }
+
 }

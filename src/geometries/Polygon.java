@@ -94,10 +94,45 @@ public class Polygon extends Geometry {
     * @return a list of intersection points or null if there are no intersections
     */
    @Override
-   public List<Point> findIntersections(Ray ray)
-   {
-     return null;
+   public List<Point> findIntersections(Ray ray) {
+      // Find intersection with the plane
+      List<Point> planeIntersections = plane.findIntersections(ray);
+      if (planeIntersections == null) return null;
+
+      Point p = planeIntersections.get(0);
+
+      // Exclude the ray origin
+      if (p.equals(ray.getHead())) return null;
+
+      int size = vertices.size();
+      Point p0 = ray.getHead();
+      Vector v = ray.getDirection();
+
+      Vector v1 = vertices.get(size - 1).subtract(p0);
+      Vector v2 = vertices.get(0).subtract(p0);
+
+      // First cross product and sign
+      Vector n = v1.crossProduct(v2);
+      double sign = alignZero(n.dotProduct(v));
+      if (isZero(sign)) return null;
+
+      boolean positive = sign > 0;
+
+      // Check all other edges
+      for (int i = 1; i < size; i++) {
+         v1 = v2;
+         v2 = vertices.get(i).subtract(p0);
+         n = v1.crossProduct(v2);
+         double s = alignZero(n.dotProduct(v));
+
+         // If cross product is zero or sign flips → point is on edge or outside
+         if (isZero(s) || (s > 0) != positive)
+            return null;
+      }
+
+      return List.of(p); // Point is inside polygon
    }
+
 
 
 

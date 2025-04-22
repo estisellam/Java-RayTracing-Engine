@@ -82,45 +82,120 @@ class CylinderTests
     @Test
     void testFindIntersections() {
         Cylinder cylinder = new Cylinder(
-                new Ray(new Point(0, 0, 0), new Vector(0, 0, 1)),
-                2, // radius
-                5  // height
+                new Ray(new Point(1, 2, 3), new Vector(1, 1, 1).normalize()),
+                1,
+                5
         );
 
-        // ============ Equivalence Partitions Tests ==============
+        // ===== Equivalence Partition Tests =====
 
-        // TC01: Ray intersects both side and one base
-        Ray r1 = new Ray(new Point(3, 0, 2), new Vector(-1, 0, 0));
-        assertEquals(2, cylinder.findIntersections(r1).size(), "Should intersect side and one base");
+        // TC01: Ray goes through the cylinder (2 points on side)
+        assertEquals(2, cylinder.findIntersections(
+                new Ray(new Point(0, 3, 3), new Vector(2, -1, 1))
+        ).size(), "TC01: Ray crosses side");
 
-        // TC02: Ray starts inside cylinder and goes out through side
-        Ray r2 = new Ray(new Point(1, 0, 1), new Vector(1, 0, 0));
-        assertEquals(1, cylinder.findIntersections(r2).size(), "Ray inside should intersect once");
+        // TC02: Ray starts inside the cylinder and exits through side (1 point)
+        assertEquals(1, cylinder.findIntersections(
+                new Ray(new Point(1.5, 2.5, 3.5), new Vector(1, 0, 0))
+        ).size(), "TC02: Ray starts inside and hits side");
 
-        // TC03: Ray misses cylinder completely
-        Ray r3 = new Ray(new Point(5, 5, 5), new Vector(1, 0, 0));
-        assertNull(cylinder.findIntersections(r3), "Ray misses cylinder");
+        // TC03: Ray starts outside and directed away (0 points)
+        assertNull(cylinder.findIntersections(
+                new Ray(new Point(10, 10, 10), new Vector(1, 1, 1))
+        ), "TC03: Ray outside and away");
 
-        // ============ Boundary Values Tests ==================
+        // TC04: Ray starts before and hits bottom base (1 point)
+        assertEquals(1, cylinder.findIntersections(
+                new Ray(new Point(0, 1, 2), new Vector(1, 1, 1))
+        ).size(), "TC04: Hits bottom base");
 
-        // TC04: Ray intersects exactly at top base center
-        Ray r4 = new Ray(new Point(0, 0, 6), new Vector(0, 0, -1));
-        assertEquals(1, cylinder.findIntersections(r4).size(), "Should intersect top base center");
+        // TC05: Ray starts before and hits top base (1 point)
+        assertEquals(1, cylinder.findIntersections(
+                new Ray(new Point(5, 5, 5), new Vector(-1, -1, -1))
+        ).size(), "TC05: Hits top base");
 
-        // TC05: Ray tangent to cylinder side (no intersection)
-        Ray r5 = new Ray(new Point(2, 0, -1), new Vector(0, 0, 1));
-        assertNull(cylinder.findIntersections(r5), "Tangent ray should not intersect");
+        // TC06: Ray goes through both bases (2 points)
+        assertEquals(2, cylinder.findIntersections(
+                new Ray(new Point(-1, 0, 1), new Vector(1, 1, 1))
+        ).size(), "TC06: Through both bases");
 
-        // TC06: Ray along axis, enters bottom and exits top
-        Ray r6 = new Ray(new Point(0, 0, -1), new Vector(0, 0, 1));
-        assertEquals(2, cylinder.findIntersections(r6).size(), "Ray through axis should intersect both bases");
+        // TC07: Ray crosses base and side (2 points)
+        assertEquals(2, cylinder.findIntersections(
+                new Ray(new Point(0, 0, 1), new Vector(1, 2, 1))
+        ).size(), "TC07: Cross base and side");
 
-        // TC07: Ray hits only bottom base from below
-        Ray r7 = new Ray(new Point(0, 0, -1), new Vector(0, 0, 1));
-        assertEquals(2, cylinder.findIntersections(r7).size(), "Should hit both bases");
+        // TC08: Ray hits side and then top base (2 points)
+        assertEquals(2, cylinder.findIntersections(
+                new Ray(new Point(0, 3, 3), new Vector(1, 1, 2))
+        ).size(), "TC08: Side then top");
+
+        // TC09: Ray starts after cylinder (0 points)
+        assertNull(cylinder.findIntersections(
+                new Ray(new Point(10, 10, 10), new Vector(1, 0, 0))
+        ), "TC09: After cylinder");
+
+        // TC10: Ray goes diagonally through (2 points)
+        assertEquals(2, cylinder.findIntersections(
+                new Ray(new Point(-2, -2, -1), new Vector(1, 1, 1))
+        ).size(), "TC10: Diagonal through");
+
+        // ===== Boundary Value Tests =====
+
+        // TC11: Ray tangent to side surface (0 points)
+        assertNull(cylinder.findIntersections(
+                new Ray(new Point(2, 3, 4), new Vector(1, 0, 0))
+        ), "TC11: Tangent to side");
+
+        // TC12: Ray starts on surface and goes inward (1 point)
+        assertEquals(1, cylinder.findIntersections(
+                new Ray(new Point(2, 2, 4), new Vector(-1, 0, 0))
+        ).size(), "TC12: From surface inward");
+
+        // TC13: Ray starts on surface and goes outward (0 points)
+        assertNull(cylinder.findIntersections(
+                new Ray(new Point(2, 2, 4), new Vector(1, 0, 0))
+        ), "TC13: From surface outward");
+
+        // TC14: Ray starts at center of bottom base (1 point)
+        assertEquals(1, cylinder.findIntersections(
+                new Ray(new Point(1, 2, 3), new Vector(1, 1, 1))
+        ).size(), "TC14: Center bottom");
+
+        // TC15: Ray starts at center of top base (0 points)
+        assertNull(cylinder.findIntersections(
+                new Ray(new Point(1 + 5 / Math.sqrt(3.0),
+                        2 + 5 / Math.sqrt(3.0),
+                        3 + 5 / Math.sqrt(3.0)),
+                        new Vector(1, 1, 1))
+        ), "TC15: Center top base out");
+
+        // TC16: Ray on edge between side and top base (0 or 1 point depending on implementation)
+        var result16 = cylinder.findIntersections(
+                new Ray(new Point(2, 3, 5), new Vector(-1, -1, -1))
+        );
+        assertTrue(result16 == null || result16.size() <= 1, "TC16: Edge of top");
+
+        // TC17: Ray exactly along axis (2 points)
+        assertEquals(2, cylinder.findIntersections(
+                new Ray(new Point(0, 1, 2), new Vector(1, 1, 1))
+        ).size(), "TC17: Along axis");
+
+        // TC18: Ray parallel to axis but outside radius (0 points)
+        assertNull(cylinder.findIntersections(
+                new Ray(new Point(4, 4, 4), new Vector(1, 1, 1))
+        ), "TC18: Parallel outside");
+
+        // TC19: Ray parallel to axis and inside radius (2 points)
+        assertEquals(2, cylinder.findIntersections(
+                new Ray(new Point(1.5, 2.5, 3.5), new Vector(1, 1, 1))
+        ).size(), "TC19: Parallel inside");
+
+        // TC20: Ray hits edge between base and side exactly (1 point)
+        assertEquals(1, cylinder.findIntersections(
+                new Ray(new Point(2, 3, 2), new Vector(-1, -1, 1))
+        ).size(), "TC20: Hits edge bottom");
     }
-
-
-
-
 }
+
+
+

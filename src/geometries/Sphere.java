@@ -5,6 +5,8 @@ import primitives.*;
 import java.util.Collections;
 import java.util.List;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 
 /**
@@ -64,10 +66,51 @@ public class Sphere extends RadialGeometry
     * @return a list of intersection points
     */
    @Override
-   public List<Point> findIntersections(Ray ray)
-   {
+   public List<Point> findIntersections(Ray ray) {
+      Point p0 = ray.getHead();
+      Vector v = ray.getDirection();
+
+      Vector u;
+      try {
+         u = center.subtract(p0);
+      } catch (IllegalArgumentException e) {
+         // The ray starts at the center of the sphere
+         return List.of(center.add(v.scale(radius)));
+      }
+
+      double tm = alignZero(u.dotProduct(v));
+      double dSquared = alignZero(u.lengthSquared() - tm * tm);
+      double rSquared = radius * radius;
+
+      if (dSquared >= rSquared)
+         return null;
+
+      double thSquared = alignZero(rSquared - dSquared);
+      if (isZero(thSquared))
+         return null;
+
+      double th = Math.sqrt(thSquared);
+      double t1 = alignZero(tm - th);
+      double t2 = alignZero(tm + th);
+
+      // Avoid returning point at head (t == 0 or negative)
+      boolean t1Valid = t1 > 0 && !isZero(t1);
+      boolean t2Valid = t2 > 0 && !isZero(t2);
+
+      if (t1Valid && t2Valid)
+         return List.of(ray.getPoint(t1), ray.getPoint(t2));
+
+      if (t1Valid)
+         return List.of(ray.getPoint(t1));
+
+      if (t2Valid)
+         return List.of(ray.getPoint(t2));
+
       return null;
    }
 
 
 }
+
+
+

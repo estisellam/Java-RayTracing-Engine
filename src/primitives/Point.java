@@ -104,7 +104,8 @@ public class Point
     */
 
    @Override
-   public boolean equals(Object obj) {
+   public boolean equals(Object obj)
+   {
       if (this == obj) return true;
       if (!(obj instanceof Point point)) return false;
       return coordinate.equals(point.coordinate);
@@ -131,5 +132,7 @@ public class Point
    {
       return "Point{" + "coordinate=" + coordinate + '}';
    }
+
+
 
 }

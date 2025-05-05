@@ -76,11 +76,7 @@ public class Polygon extends Geometry {
       }
    }
 
-   /**
-    * get normal func
-    * @param point point on the polygon
-    * @return normal vector
-    */
+
    @Override
    public Vector getNormal(Point point)
    {

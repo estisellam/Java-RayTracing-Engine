@@ -1,100 +1,109 @@
 package primitives;
+
 import static primitives.Util.isZero;
 
 /**
- * class represents a vector
- *  @author esti
+ * Represents a 3D vector in space.
+ * Provides methods for vector arithmetic, normalization, and other vector operations.
+ *
+ * This class is immutable and thread-safe.
+ *
+ * @author esti
  */
 public class Vector extends Point {
+
     /**
-     * X axis unit vector
+     * Unit vector along the X-axis.
      */
     public static final Vector AXIS_X = new Vector(1, 0, 0);
+
     /**
-     * Y axis unit vector
+     * Unit vector along the Y-axis.
      */
     public static final Vector AXIS_Y = new Vector(0, 1, 0);
+
     /**
-     * Z axis unit vector
+     * Unit vector along the Z-axis.
      */
     public static final Vector AXIS_Z = new Vector(0, 0, 1);
+
     /**
-     * X axis opposite unit vector
+     * Opposite unit vector along the X-axis.
      */
     public static final Vector MINUS_X = new Vector(-1, 0, 0);
+
     /**
-     * Y axis opposite unit vector
+     * Opposite unit vector along the Y-axis.
      */
     public static final Vector MINUS_Y = new Vector(0, -1, 0);
+
     /**
-     * Z axis opposite unit vector
+     * Opposite unit vector along the Z-axis.
      */
     public static final Vector MINUS_Z = new Vector(0, 0, -1);
 
     /**
-     * Vector constructor by 3 coordinate values
+     * Constructs a vector using a `Double3` object.
      *
-     * @param coordinate
+     * @param coordinate The 3D coordinates of the vector.
+     * @throws IllegalArgumentException If the vector is a zero vector.
      */
     public Vector(Double3 coordinate) {
         super(coordinate);
         if (isZero(coordinate.d1()) && isZero(coordinate.d2()) && isZero(coordinate.d3())) {
-            throw new IllegalArgumentException(" zero vector not allowed");
+            throw new IllegalArgumentException("Zero vector is not allowed");
         }
     }
 
-
     /**
-     * vector constuctor by 3 points
+     * Constructs a vector using three coordinate values.
      *
-     * @param x
-     * @param y
-     * @param z
+     * @param x The X-coordinate of the vector.
+     * @param y The Y-coordinate of the vector.
+     * @param z The Z-coordinate of the vector.
      */
-
     public Vector(double x, double y, double z) {
         this(new Double3(x, y, z));
     }
 
-
     /**
-     * add function between two vectors
+     * Adds another vector to this vector.
      *
-     * @param vector
-     * @return
+     * @param vector The vector to add.
+     * @return A new vector representing the sum of the two vectors.
      */
     @Override
     public Vector add(Vector vector) {
         return new Vector(coordinates.add(vector.coordinates));
-
     }
 
     /**
-     * This function returns a new vector that is the result of multiplying the current vector by a scalar
+     * Scales this vector by a scalar value.
      *
-     * @param scalar the scalar to multiply the vector by
-     * @return A new Vector object.
+     * @param scalar The scalar value to multiply the vector by.
+     * @return A new vector representing the scaled vector.
      */
     public Vector scale(double scalar) {
         return new Vector(coordinates.scale(scalar));
-
     }
 
     /**
-     * This function calculates the dot product of two vectors.
+     * Calculates the dot product of this vector and another vector.
      *
-     * @param vector
-     * @return
+     * @param vector The other vector.
+     * @return The dot product of the two vectors.
      */
     public double dotProduct(Vector vector) {
-        return coordinates.d1() * vector.coordinates.d1() + coordinates.d2() * vector.coordinates.d2() + coordinates.d3() * vector.coordinates.d3();
+        return coordinates.d1() * vector.coordinates.d1() +
+                coordinates.d2() * vector.coordinates.d2() +
+                coordinates.d3() * vector.coordinates.d3();
     }
 
     /**
-     * This function calculates the cross product of two vectors.
+     * Calculates the cross product of this vector and another vector.
      *
-     * @param vector
-     * @return
+     * @param vector The other vector.
+     * @return A new vector representing the cross product.
      */
     public Vector crossProduct(Vector vector) {
         double x = coordinates.d2() * vector.coordinates.d3() - coordinates.d3() * vector.coordinates.d2();
@@ -103,6 +112,11 @@ public class Vector extends Point {
         return new Vector(new Double3(x, y, z));
     }
 
+    /**
+     * Calculates the squared length of this vector.
+     *
+     * @return The squared length of the vector.
+     */
     public double lengthSquared() {
         double u1 = coordinates.d1();
         double u2 = coordinates.d2();
@@ -110,14 +124,20 @@ public class Vector extends Point {
         return u1 * u1 + u2 * u2 + u3 * u3;
     }
 
+    /**
+     * Calculates the length (magnitude) of this vector.
+     *
+     * @return The length of the vector.
+     */
     public double length() {
         return Math.sqrt(lengthSquared());
     }
 
     /**
-     * func for normalize vector
+     * Normalizes this vector to a unit vector.
      *
-     * @return
+     * @return A new vector representing the normalized vector.
+     * @throws IllegalStateException If the vector has zero length.
      */
     public Vector normalize() {
         double length = length();
@@ -127,23 +147,13 @@ public class Vector extends Point {
         return scale(1 / length);
     }
 
-    /**
-     * This function returns a string representation of the vector.
-     *
-     * @return
-     */
 
     @Override
     public String toString() {
         return "Vector " + super.toString();
     }
 
-    /**
-     * This function checks if two vectors are equal.
-     *
-     * @param obj
-     * @return
-     */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -153,15 +163,9 @@ public class Vector extends Point {
         }
     }
 
-    /**
-     * this function returns the hash code of the vector
-     *
-     * @return
-     */
+
     @Override
     public int hashCode() {
         return super.hashCode();
     }
-
-
 }

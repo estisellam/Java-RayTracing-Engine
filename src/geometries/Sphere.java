@@ -1,25 +1,31 @@
 package geometries;
+
 import primitives.Vector;
 import primitives.*;
 import java.util.List;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
-
 /**
- * class to represent a sphere
- *  @author esti
+ * Represents a sphere in 3D space.
+ * Provides methods to retrieve the sphere's properties and find intersections with a ray.
+ * Extends the {@link RadialGeometry} class.
+ *
+ * @author esti
  */
 public class Sphere extends RadialGeometry {
+
    /**
-    * center of the sphere
+    * The center point of the sphere.
     */
    private final Point center;
 
    /**
-    * constructor with point, radius and sphere
-    * @param center point of the sphere
-    * @param radius radius of the sphere
+    * Constructs a sphere with the specified center and radius.
+    *
+    * @param center The center point of the sphere.
+    * @param radius The radius of the sphere.
+    * @throws IllegalArgumentException If the radius is less than or equal to zero.
     */
    public Sphere(Point center, double radius) {
       super(radius);
@@ -27,30 +33,24 @@ public class Sphere extends RadialGeometry {
    }
 
    /**
-    * func get for center
-    * @return center
+    * Returns the center point of the sphere.
+    *
+    * @return The center point of the sphere.
     */
    public Point getCenter() {
       return center;
    }
 
-   /**
-    * override func get for get normal
-    * @param point point to get the normal at
-    * @return
-    */
+
    @Override
    public Vector getNormal(Point point) {
       return point.subtract(center).normalize();
    }
 
-   /**
-    * func override toString
-    * @return
-    */
+
    @Override
    public String toString() {
-      return "Sphere:" + "center:" + center + "radius:" + radius;
+      return "Sphere: center: " + center + ", radius: " + radius;
    }
 
 
@@ -102,9 +102,4 @@ public class Sphere extends RadialGeometry {
 
       return null; // No valid intersection
    }
-
-
 }
-
-
-

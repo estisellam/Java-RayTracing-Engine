@@ -1,37 +1,43 @@
 package geometries;
+
 import primitives.*;
 import java.util.ArrayList;
 import java.util.List;
 import static primitives.Util.*;
-import static primitives.Util.alignZero;
 
 /**
- * class to represent a tube
- *  @author esti
+ * Represents a tube in 3D space, defined by a central axis and radius.
+ * Extends the {@link RadialGeometry} class.
+ * Provides methods to retrieve the tube's properties.
+ *
+ * A tube is an infinite cylinder with a circular cross-section.
+ * It is defined by a central axis (ray) and a radius.
+ *
+ * @author esti
  */
 public class Tube extends RadialGeometry {
+
    /**
-    * ray of the main axis of the tube
+    * The central axis of the tube.
     */
    protected final Ray mainAxis;
 
    /**
-    * constructor
-    * @param x - radius
-    * @param y - ray
+    * Constructs a tube with a given radius and central axis.
+    *
+    * @param x The radius of the tube.
+    * @param y The central axis of the tube.
+    * @throws IllegalArgumentException If the radius is less than or equal to zero, or if the axis is null.
     */
    public Tube(double x, Ray y) {
       super(x);
-        if (y == null)
-             throw new IllegalArgumentException("Error: ray cannot be null.");
-        mainAxis =y;
+      if (y == null) {
+         throw new IllegalArgumentException("Error: ray cannot be null.");
+      }
+      mainAxis = y;
    }
 
-   /**
-    * get normal to the tube
-    * @param
-    * @return
-    */
+
    @Override
    public Vector getNormal(Point p) {
       Point p0 = mainAxis.getHead();
@@ -48,6 +54,7 @@ public class Tube extends RadialGeometry {
       return normal.normalize();
    }
 
+
    @Override
    public List<Point> findIntersections(Ray ray) {
       Point p = ray.getHead();
@@ -55,7 +62,6 @@ public class Tube extends RadialGeometry {
       Point p0 = mainAxis.getHead();
       Vector va = mainAxis.getDirection();
 
-      // check if ray starts on the axis and goes in the same direction
       if (p.equals(p0)) {
          double angleCos = v.normalize().dotProduct(va.normalize());
          if (isZero(Math.abs(angleCos) - 1)) {
@@ -109,9 +115,6 @@ public class Tube extends RadialGeometry {
       if (alignZero(t1) > 0) result.add(ray.getPoint(t1));
       if (alignZero(t2) > 0 && !isZero(t1 - t2)) result.add(ray.getPoint(t2));
 
-
       return result.isEmpty() ? null : result;
    }
-
-
 }

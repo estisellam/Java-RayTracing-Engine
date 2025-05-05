@@ -5,20 +5,21 @@ import primitives.Vector;
 import primitives.Ray;
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
-
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Class to represent a cylinder, which is a tube with a finite height.
- *  @author esti
+ * Represents a cylinder in 3D space, defined by a central axis, radius, and height.
  */
 public class Cylinder extends Tube {
-   private final double height; // The height of the cylinder
+   /**
+    * The height of the cylinder.
+    */
+   private final double height;
 
    /**
-    * Constructor with ray, radius, and height.
+    * Constructs a cylinder with a given axis ray, radius, and height.
     *
     * @param axisRay The central axis of the cylinder.
     * @param radius  The radius of the cylinder.
@@ -30,7 +31,7 @@ public class Cylinder extends Tube {
    }
 
    /**
-    * Getter for the height of the cylinder.
+    * Returns the height of the cylinder.
     *
     * @return The height of the cylinder.
     */
@@ -38,35 +39,28 @@ public class Cylinder extends Tube {
       return height;
    }
 
-   /**
-    * Get the normal vector at a given point on the cylinder.
-    * @param point point to get the normal at
-    * @return
-    */
    @Override
    public Vector getNormal(Point point) {
-      Point p0 = mainAxis.getHead(); // Base center
+      Point p0 = mainAxis.getHead();
       Vector dir = mainAxis.getDirection();
 
       double t;
       try {
-         Vector v = point.subtract(p0); // Vector from base center to the point
+         Vector v = point.subtract(p0);
          t = alignZero(v.dotProduct(dir));
       } catch (IllegalArgumentException e) {
-         return dir.scale(-1); // Point is at the base center
+         return dir.scale(-1);
       }
 
-      if (isZero(t)) // Point is on the bottom base
+      if (isZero(t))
          return dir.scale(-1);
       if (isZero(t - height))
          return dir;
 
-      // Point is on the side surface
       Point o = mainAxis.getPoint(t);
       return point.subtract(o).normalize();
    }
 
- 
    @Override
    public List<Point> findIntersections(Ray ray) {
       Point p = ray.getHead();
@@ -76,7 +70,6 @@ public class Cylinder extends Tube {
 
       List<Point> result = new LinkedList<>();
 
-      // 1. Intersections with the tube's side
       List<Point> tubePoints = super.findIntersections(ray);
       if (tubePoints != null) {
          for (Point pt : tubePoints) {
@@ -87,48 +80,44 @@ public class Cylinder extends Tube {
          }
       }
 
-      double nv = va.dotProduct(v); // Dot product of axis direction and ray direction
+      double nv = va.dotProduct(v);
       if (!isZero(nv)) {
-         // 2. Intersection with the bottom base
-         Vector u = p0.subtract(p); // Vector from ray origin to base center
+         Vector u = p0.subtract(p);
          double t1 = alignZero(va.dotProduct(u) / nv);
          if (alignZero(t1) >= 0) {
             Point q1 = ray.getPoint(t1);
             try {
-               Vector vec = q1.subtract(p0); // Vector from base center to intersection
+               Vector vec = q1.subtract(p0);
                if (alignZero(vec.lengthSquared() - radius * radius) <= 0) {
                   result.add(q1);
                }
             } catch (IllegalArgumentException e) {
-               result.add(q1); // Point is exactly at the center
+               result.add(q1);
             }
          }
 
-         // 3. Intersection with the top base
          Point top = p0.add(va.scale(height));
          Vector uTop = top.subtract(p);
          double t2 = alignZero(va.dotProduct(uTop) / nv);
          if (t2 > 0) {
-            Point q2 = ray.getPoint(t2); //
+            Point q2 = ray.getPoint(t2);
             try {
-               Vector vec = q2.subtract(top); // Vector from top base center to intersection
+               Vector vec = q2.subtract(top);
                if (alignZero(vec.lengthSquared() - radius * radius) <= 0) {
-                  // Prevent duplicates
                   if (result.stream().noneMatch(pnt -> pnt.equals(q2))) {
                      result.add(q2);
                   }
                }
             } catch (IllegalArgumentException e) {
-               result.add(q2); // Point is exactly at the center
+               result.add(q2);
             }
          }
       }
 
       if (result.isEmpty()) {
-         return null; // No intersections
+         return null;
       }
 
-      // Sort the intersection points by distance from the ray origin
       result.sort(Comparator.comparingDouble(pnt -> pnt.distance(p)));
       return result;
    }

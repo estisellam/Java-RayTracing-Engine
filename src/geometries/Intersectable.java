@@ -1,15 +1,19 @@
 package geometries;
+
 import primitives.*;
 import java.util.List;
+
 /**
- * interface to represent an intersectable object
- *  @author esti
+ * Represents an object that can be intersected by a ray.
+ * Provides a method to find intersection points with a given ray.
  */
 public interface Intersectable {
+
     /**
-     * function to find intersections with a ray
-     * @param ray the ray to find intersections with
-     * @return a list of intersection points
+     * Finds intersection points of a ray with the object.
+     *
+     * @param ray The ray to intersect with the object.
+     * @return A list of intersection points, or null if no intersections exist.
      */
-    List <Point> findIntersections(Ray ray);
+    List<Point> findIntersections(Ray ray);
 }

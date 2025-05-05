@@ -3,23 +3,34 @@ package primitives;
 import static primitives.Util.isZero;
 
 /**
- *  class represents ray
- *   @author esti
+ * Represents a ray in 3D space, defined by an origin point and a direction vector.
+ * Provides methods to retrieve the ray's properties and calculate points along the ray.
+ *
+ * A ray is a half-line that starts at a specific point (origin) and extends infinitely
+ * in a specific direction.
+ *
+ * This class is immutable and thread-safe.
+ *
+ * @author esti
  */
 public class Ray {
+
    /**
-    * point of origin
+    * The origin point of the ray.
     */
    private final Point head;
+
    /**
-    * direction of the ray
+    * The direction vector of the ray.
     */
    private final Vector direction;
 
    /**
-    * constructor with point and vector
-    * @param a
-    * @param b
+    * Constructs a ray with a given origin point and direction vector.
+    *
+    * @param a The origin point of the ray.
+    * @param b The direction vector of the ray.
+    * @throws IllegalArgumentException If the direction vector is null or not normalized.
     */
    public Ray(Point a, Vector b) {
       head = a;
@@ -27,61 +38,57 @@ public class Ray {
    }
 
    /**
-    The `getPoint(double a)` method returns a point on a line starting at `origin` and going in the direction of `direction`
-    . The point is calculated based on the value of `a`, which controls how far along the line the point is. If there is a problem
-    (like `null` or an error), it returns the `origin` point instead.
-    * @return
+    * Returns a point on the ray at a given distance from the origin.
+    *
+    * @param t The distance from the origin. A positive value indicates a point
+    *          in the direction of the ray, while a negative value indicates a
+    *          point in the opposite direction.
+    * @return The point on the ray at the given distance.
     */
    public Point getPoint(double t) {
       return isZero(t) ? head : head.add(direction.scale(t));
    }
 
    /**
-    * getter for the head
-    * @return
+    * Returns the origin point of the ray.
+    *
+    * @return The origin point of the ray.
     */
-
-   public Point getHead()
-   {
+   public Point getHead() {
       return head;
    }
 
    /**
-    * getter for the direction
-    * @return
+    * Returns the direction vector of the ray.
+    *
+    * @return The direction vector of the ray.
     */
-    public Vector getDirection()
-    {
-        return direction;
-    }
+   public Vector getDirection() {
+      return direction;
+   }
 
    /**
-    * ovveride equals func
-    * @param object
-    * @return
+    * Compares this ray to another object for equality.
+    *
+    * @param object The object to compare.
+    * @return {@code true} if the object is a ray with the same origin and direction,
+    *         {@code false} otherwise.
     */
-   public boolean equals(Object object)
-   {
+   @Override
+   public boolean equals(Object object) {
       if (this == object) return true;
       return (object instanceof Ray other) && head.equals(other.head) && direction.equals(other.direction);
    }
 
-   /**
-    * ovveride hashcode func
-    * @return
-    */
-   public int hashCode()
-   {
+
+   @Override
+   public int hashCode() {
       return head.hashCode() + direction.hashCode();
    }
-   /**
-    * ovveride tostring func
-    * @return
-    */
-   @Override
-   public String toString()
-   {
-      return "primitives.Ray{" + "head=" + head + "direction=" + direction + '}';
-   }
 
+
+   @Override
+   public String toString() {
+      return "primitives.Ray{" + "head=" + head + ", direction=" + direction + '}';
+   }
 }

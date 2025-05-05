@@ -1,24 +1,33 @@
 package geometries;
+
 import primitives.*;
 import java.util.List;
 
 import static primitives.Util.alignZero;
 
 /**
- * class to represent a triangle
- *  @author esti
+ * Represents a triangle in 3D space, defined by three vertices.
+ * Extends the {@link Polygon} class.
+ * Provides methods to retrieve the triangle's properties.
+ *
+ * A triangle is a special case of a polygon with exactly three vertices.
+ * It is always convex and lies in a single plane.
+ *
+ * @author esti
  */
 public class Triangle extends Polygon {
+
     /**
-     * constructor with 3 points for a triangle
-     * @param x
-     * @param y
-     * @param z
+     * Constructs a triangle using three points (vertices).
+     *
+     * @param x The first vertex of the triangle.
+     * @param y The second vertex of the triangle.
+     * @param z The third vertex of the triangle.
+     * @throws IllegalArgumentException If the vertices are collinear or invalid for a triangle.
      */
     public Triangle(Point x, Point y, Point z) {
         super(x, y, z);
     }
-
 
     @Override
     public List<Point> findIntersections(Ray ray) {
@@ -50,6 +59,4 @@ public class Triangle extends Polygon {
 
         return null; // Point is outside the triangle
     }
-
-
 }

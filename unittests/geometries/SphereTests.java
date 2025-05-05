@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link geometries.Sphere} class.
+ *  @author esti
  */
 class SphereTests {
 
@@ -92,7 +93,9 @@ class SphereTests {
         final var result1 = sphere.findIntersections(new Ray(p01, v310));
         assertNotNull(result1, "Can't be empty list");
         assertEquals(2, result1.size(), "Wrong number of points");
-        assertEquals(exp, result1, "Ray crosses sphere");
+        for (int i = 0; i < exp.size(); i++) {
+            assertEquals(exp.get(i), result1.get(i), "Point mismatch at index " + i);
+        }
 
         // TC03: Ray starts inside the sphere (1 point)
         Ray ray3 = new Ray(new Point(1, 0.5, 0), new Vector(1, 1, 0).normalize());

@@ -1,18 +1,18 @@
 package geometries;
-
 import geometries.*;
 import org.junit.jupiter.api.Test;
 import primitives.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.List;
 
+/**
+ * Unit tests for {@link geometries.Geometries} class.
+ *  * @author esti
+ */
 public class GeometriesTests
 {
     @Test
-    public void testFindIntersections()
-    {
+    public void testFindIntersections() {
         Sphere sphere = new Sphere(new Point(0, 0, 3), 1); // Should have 2 intersections
         Plane plane = new Plane(new Point(0, 0, 4), new Vector(0, 0, 1)); // Should have 1 intersection
         Triangle triangle = new Triangle(new Point(-1, -1, 2), new Point(1, -1, 2), new Point(0, 1, 2)); // Should have 1 intersection

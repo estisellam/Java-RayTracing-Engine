@@ -1,5 +1,10 @@
 package primitives;
+import static primitives.Util.isZero;
 
+/**
+ * class represents a vector
+ *  @author esti
+ */
 public class Vector extends Point {
     /**
      * X axis unit vector
@@ -33,10 +38,11 @@ public class Vector extends Point {
      */
     public Vector(Double3 coordinate) {
         super(coordinate);
-        if (coordinate.equals(Double3.ZERO)) {
+        if (isZero(coordinate.d1()) && isZero(coordinate.d2()) && isZero(coordinate.d3())) {
             throw new IllegalArgumentException(" zero vector not allowed");
         }
     }
+
 
     /**
      * vector constuctor by 3 points
@@ -47,8 +53,9 @@ public class Vector extends Point {
      */
 
     public Vector(double x, double y, double z) {
-       this(new Double3(x, y, z));
+        this(new Double3(x, y, z));
     }
+
 
     /**
      * add function between two vectors

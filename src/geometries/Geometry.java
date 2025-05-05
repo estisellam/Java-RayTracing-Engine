@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * abstract class to represent a geometry
+ *  @author esti
  */
-public abstract class Geometry implements Intersectable
-{
+public abstract class Geometry implements Intersectable {
    /**
     * abstract function to get normal
     * @param p point to get the normal at

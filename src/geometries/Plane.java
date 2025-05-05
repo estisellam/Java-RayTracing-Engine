@@ -1,17 +1,14 @@
 package geometries;
 import primitives.*;
-
-import java.util.Collections;
 import java.util.List;
-
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
  * class to represent a plane
+ *  @author esti
  */
-public class Plane extends Geometry
-{
+public class Plane extends Geometry {
    /**
     * point on the plane
     */
@@ -28,8 +25,7 @@ public class Plane extends Geometry
     * @param z point on the plane
     * @throws IllegalArgumentException if points are collinear or the normal vector length is zero
     */
-   public Plane(Point x, Point y, Point z) throws IllegalArgumentException
-   {
+   public Plane(Point x, Point y, Point z) throws IllegalArgumentException {
       point = x;
       Vector a = y.subtract(x);
       Vector b = z.subtract(x);
@@ -48,8 +44,7 @@ public class Plane extends Geometry
     * @param x point on the plane
     * @param a point on the plane
     */
-   public Plane(Point x, Vector a)
-   {
+   public Plane(Point x, Vector a) {
       point = x;
       normal = a.normalize();
    }
@@ -58,16 +53,15 @@ public class Plane extends Geometry
     * func get for point
     * @return point
     */
-   public Point getPoint()
-   {
+   public Point getPoint() {
         return point;
    }
 
-   /**
-    * func get for normal
-    * @param p point on the plane
-    * @return the normal vector of the plane
-    */
+    /**
+     * override func get for normal
+     * @param p point to get the normal at
+     * @return
+     */
    @Override
    public Vector getNormal(Point p)
    {
@@ -80,16 +74,25 @@ public class Plane extends Geometry
                   "normal:" + normal +
                   '}';
     }
+
+    /**
+     * override equals function
+     * @param object
+     * @return
+     */
     @Override
-    public boolean equals(Object object)
-    {
+    public boolean equals(Object object) {
         if (!(object instanceof Plane plane)) return false;
         if (!super.equals(object)) return false;
         return java.util.Objects.equals(point, plane.point) && java.util.Objects.equals(normal, plane.normal);
     }
+
+    /**
+     * override hashCode function
+     * @return
+     */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return point.hashCode() + normal.hashCode();
     }
 

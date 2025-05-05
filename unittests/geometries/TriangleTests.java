@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Unit tests for {@link geometries.Triangle} class.
+ * @author esti
  */
 class TriangleTests {
 

@@ -6,17 +6,16 @@ import static primitives.Util.alignZero;
 
 /**
  * class to represent a triangle
+ *  @author esti
  */
-public class Triangle extends Polygon
-{
+public class Triangle extends Polygon {
     /**
      * constructor with 3 points for a triangle
      * @param x
      * @param y
      * @param z
      */
-    public Triangle(Point x, Point y, Point z)
-    {
+    public Triangle(Point x, Point y, Point z) {
         super(x, y, z);
     }
 

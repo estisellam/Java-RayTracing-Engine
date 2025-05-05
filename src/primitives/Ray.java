@@ -4,9 +4,9 @@ import static primitives.Util.isZero;
 
 /**
  *  class represents ray
+ *   @author esti
  */
-public class Ray
-{
+public class Ray {
    /**
     * point of origin
     */
@@ -32,12 +32,10 @@ public class Ray
     (like `null` or an error), it returns the `origin` point instead.
     * @return
     */
-   public Point getPoint(double a)
-   {
-      if(isZero(a)) return head;
-      //P=P0+V*t
-         return head.add(direction.scale(a));
+   public Point getPoint(double t) {
+      return isZero(t) ? head : head.add(direction.scale(t));
    }
+
    /**
     * getter for the head
     * @return

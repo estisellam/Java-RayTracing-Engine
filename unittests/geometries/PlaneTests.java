@@ -1,16 +1,14 @@
 package geometries;
-
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for {@link geometries.Plane} class.
+ *  @author esti
  */
 class PlaneTests {
     private static final double DELTA = 0.000001;

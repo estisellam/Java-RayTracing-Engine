@@ -1,19 +1,16 @@
 package geometries;
 import primitives.Vector;
 import primitives.*;
-
-import java.util.Collections;
 import java.util.List;
-
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 
 /**
  * class to represent a sphere
+ *  @author esti
  */
-public class Sphere extends RadialGeometry
-{
+public class Sphere extends RadialGeometry {
    /**
     * center of the sphere
     */
@@ -24,8 +21,7 @@ public class Sphere extends RadialGeometry
     * @param center point of the sphere
     * @param radius radius of the sphere
     */
-   public Sphere(Point center, double radius)
-   {
+   public Sphere(Point center, double radius) {
       super(radius);
       this.center = center;
    }
@@ -34,29 +30,26 @@ public class Sphere extends RadialGeometry
     * func get for center
     * @return center
     */
-   public Point getCenter()
-   {
+   public Point getCenter() {
       return center;
    }
 
    /**
-    * func get for normal
-    * @param point point on the sphere
-    * @return normal vector
+    * override func get for get normal
+    * @param point point to get the normal at
+    * @return
     */
    @Override
-   public Vector getNormal(Point point)
-   {
+   public Vector getNormal(Point point) {
       return point.subtract(center).normalize();
    }
 
    /**
-    * toString function
-    * @return string representation of the sphere
+    * func override toString
+    * @return
     */
    @Override
-   public String toString()
-   {
+   public String toString() {
       return "Sphere:" + "center:" + center + "radius:" + radius;
    }
 

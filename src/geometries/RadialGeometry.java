@@ -2,9 +2,9 @@ package geometries;
 
 /**
  * abstract class to represent radial geometry
+ *  @author esti
  */
-public abstract class RadialGeometry extends Geometry
-{
+public abstract class RadialGeometry extends Geometry {
    /**
     * radius of the radial geometry
     */
@@ -14,8 +14,7 @@ public abstract class RadialGeometry extends Geometry
     * constructor with a radius
     * @param a radius of the radial geometry
     */
-   public RadialGeometry(double a)
-   {
+   public RadialGeometry(double a) {
       if(a<=0)
          throw new IllegalArgumentException("Error: radius should be greater than zero.");
       radius = a;
@@ -25,8 +24,7 @@ public abstract class RadialGeometry extends Geometry
     * func get for radius
     * @return radius
     */
-   public double getRadius()
-   {
+   public double getRadius() {
       return radius;
    }
 }

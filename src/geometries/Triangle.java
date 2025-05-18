@@ -33,7 +33,7 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         List<Point> planeIntersections = plane.findIntersections(ray);
         if (planeIntersections == null) return null;
 
@@ -58,7 +58,7 @@ public class Triangle extends Polygon {
         double s3 = alignZero(v.dotProduct(n3));
 
         if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0))
-            return List.of(p); // Point is inside the triangle
+            return List.of(new Intersection(this,p)); // Point is inside the triangle
 
         return null; // Point is outside the triangle
     }

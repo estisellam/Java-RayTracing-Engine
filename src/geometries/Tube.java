@@ -61,8 +61,7 @@ public class Tube extends RadialGeometry {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        Point p = ray.getHead();
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {        Point p = ray.getHead();
         Vector v = ray.getDirection();
         Point p0 = mainAxis.getHead();
         Vector va = mainAxis.getDirection();
@@ -116,9 +115,9 @@ public class Tube extends RadialGeometry {
         double t1 = alignZero((-b - sqrtD) / (2 * a));
         double t2 = alignZero((-b + sqrtD) / (2 * a));
 
-        List<Point> result = new ArrayList<>();
-        if (alignZero(t1) > 0) result.add(ray.getPoint(t1));
-        if (alignZero(t2) > 0 && !isZero(t1 - t2)) result.add(ray.getPoint(t2));
+        List<Intersection> result = new ArrayList<>();
+        if (alignZero(t1) > 0) result.add(new Intersection(this,ray.getPoint(t1)));
+        if (alignZero(t2) > 0 && !isZero(t1 - t2)) result.add(new Intersection(this,ray.getPoint(t2)));
 
         return result.isEmpty() ? null : result;
     }

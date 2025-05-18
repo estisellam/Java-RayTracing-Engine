@@ -92,8 +92,7 @@ public class Plane extends Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        Vector x = ray.getDirection();
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {        Vector x = ray.getDirection();
         Point a = ray.getHead();
 
         double nv = normal.dotProduct(x);
@@ -118,6 +117,6 @@ public class Plane extends Geometry {
         Point intersection = ray.getPoint(t);
 
         // Return the list with the single intersection point
-        return List.of(intersection);
+        return List.of(new Intersection(this,intersection));
     }
 }

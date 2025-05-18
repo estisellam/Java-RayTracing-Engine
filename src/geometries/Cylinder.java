@@ -64,20 +64,20 @@ public class  Cylinder extends Tube {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         Point p = ray.getHead();
         Vector v = ray.getDirection();
         Point p0 = mainAxis.getHead();
         Vector va = mainAxis.getDirection();
 
-        List<Point> result = new LinkedList<>();
+        List<Intersection> result = new LinkedList<>();
 
         List<Point> tubePoints = super.findIntersections(ray);
         if (tubePoints != null) {
             for (Point pt : tubePoints) {
                 double t = alignZero(pt.subtract(p0).dotProduct(va));
                 if (alignZero(t) >= 0 && alignZero(t - height) <= 0) {
-                    result.add(pt);
+                    result.add(new Intersection(this,pt));
                 }
             }
         }
@@ -91,10 +91,10 @@ public class  Cylinder extends Tube {
                 try {
                     Vector vec = q1.subtract(p0);
                     if (alignZero(vec.lengthSquared() - radius * radius) <= 0) {
-                        result.add(q1);
+                        result.add(new Intersection(this,q1));
                     }
                 } catch (IllegalArgumentException e) {
-                    result.add(q1);
+                    result.add(new Intersection(this,q1));
                 }
             }
 
@@ -107,11 +107,11 @@ public class  Cylinder extends Tube {
                     Vector vec = q2.subtract(top);
                     if (alignZero(vec.lengthSquared() - radius * radius) <= 0) {
                         if (result.stream().noneMatch(pnt -> pnt.equals(q2))) {
-                            result.add(q2);
+                            result.add(new Intersection(this,q2));
                         }
                     }
                 } catch (IllegalArgumentException e) {
-                    result.add(q2);
+                    result.add(new Intersection(this,q2));
                 }
             }
         }
@@ -120,7 +120,7 @@ public class  Cylinder extends Tube {
             return null;
         }
 
-        result.sort(Comparator.comparingDouble(pnt -> pnt.distance(p)));
+        result.sort(Comparator.comparingDouble(geo -> geo.point.distance(p)));
         return result;
     }
 

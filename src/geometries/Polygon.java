@@ -97,7 +97,7 @@ public class Polygon extends Geometry {
 
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<Intersection> calculateIntersectionsHelper(Ray ray) {
         // Find intersection with the plane
         List<Point> planeIntersections = plane.findIntersections(ray);
         if (planeIntersections == null) return null;
@@ -133,7 +133,7 @@ public class Polygon extends Geometry {
                 return null;
         }
 
-        return List.of(p); // Point is inside polygon
+        return List.of(new Intersection(this,p)); // Point is inside polygon
     }
 
 

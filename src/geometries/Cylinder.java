@@ -72,12 +72,13 @@ public class  Cylinder extends Tube {
 
         List<Intersection> result = new LinkedList<>();
 
-        List<Point> tubePoints = super.findIntersections(ray);
-        if (tubePoints != null) {
-            for (Point pt : tubePoints) {
+        List<Intersection> tubeIntersections = super.calculateIntersectionsHelper(ray);
+        if (tubeIntersections != null) {
+            for (Intersection inter : tubeIntersections) {
+                Point pt = inter.point;
                 double t = alignZero(pt.subtract(p0).dotProduct(va));
                 if (alignZero(t) >= 0 && alignZero(t - height) <= 0) {
-                    result.add(new Intersection(this,pt));
+                    result.add(new Intersection(this, pt));
                 }
             }
         }

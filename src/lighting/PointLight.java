@@ -46,11 +46,10 @@ public class PointLight extends Light implements LightSource {
         double d = position.distance(p);
         double attenuation = kC + kL * d + kQ * d * d;
 
-        if (isZero(attenuation)) {
-            return Color.BLACK;
-        }
+        double scalingFactor = 1.0 / attenuation;
 
-        return intensity.scale(1 / attenuation);
+        if (scalingFactor > 1) scalingFactor = 1; // לא לאפשר הגברה
+        return intensity.scale(scalingFactor);
     }
 
     /**

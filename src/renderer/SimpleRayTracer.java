@@ -6,6 +6,7 @@ import primitives.*;
 import scene.Scene;
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -41,27 +42,22 @@ public class SimpleRayTracer extends RayTracerBase {
      * @param intersection the closest intersection (geometry + point)
      * @return the color at the point
      */
-    private Color calcColor(Intersectable.Intersection intersection, Ray ray) {
-        if (!preprocessIntersection(intersection, ray.getDirection())) {
-            return Color.BLACK;
-        }
+        private Color calcColor(Intersectable.Intersection intersection, Ray ray) {
+            if (!preprocessIntersection(intersection, ray.getDirection())) {
+                return Color.BLACK;
+            }
 
-        Color ambient = scene.ambientLight.getIntensity().scale(intersection.material.KA);
+            Color ambient = scene.ambientLight.getIntensity().scale(intersection.material.KA);
+            Color localEffects = Color.BLACK;
 
-        Color localEffects = Color.BLACK;
+            for (LightSource light : scene.lights) {
+                if (!setLightSource(intersection, light)) continue;
 
-        for (LightSource light : scene.lights) {
-            if (!setLightSource(intersection, light)) continue;
+                localEffects = localEffects.add(calcColorLocalEffects(intersection));
+            }
 
-            Color lightIntensity = light.getIntensity(intersection.point);
-            Double3 diffuse = calcDiffuse(intersection);
-            Double3 specular = calcSpecular(intersection);
-
-            localEffects = localEffects.add(lightIntensity.scale(diffuse.add(specular)));
-        }
-
-        return ambient.add(localEffects);
-    }
+            Color emission = intersection.geometry.getEmission();
+            return ambient.add(localEffects).add(emission);        }
 
     /**
      * Preprocesses the intersection data.
@@ -72,11 +68,9 @@ public class SimpleRayTracer extends RayTracerBase {
 
     public boolean preprocessIntersection(Intersectable.Intersection intersection, Vector rayDirection) {
         Vector normal = intersection.geometry.getNormal(intersection.point);
-        Vector v = rayDirection;
-        double nv = normal.dotProduct(v);
-
+        double nv = normal.dotProduct(rayDirection);
         intersection.Normal = normal;
-        intersection.directionRay = v;
+        intersection.directionRay = rayDirection;
         intersection.ScaleDN = nv;
 
         return !isZero(nv);
@@ -91,12 +85,14 @@ public class SimpleRayTracer extends RayTracerBase {
     public boolean setLightSource(Intersectable.Intersection intersection, LightSource lightSource) {
         Vector l = lightSource.getL(intersection.point);
         double nl = intersection.Normal.dotProduct(l);
+        double nv = intersection.Normal.dotProduct(intersection.directionRay);
 
         intersection.lightSource = lightSource;
         intersection.DirectionLightSource = l;
         intersection.ScaleDL = nl;
+        intersection.ScaleDN = nv;
 
-        return !isZero(nl) && !isZero(intersection.ScaleDN);
+        return !isZero(nl) && !isZero(nv) && nl * nv > 0;
     }
 
     /**
@@ -104,11 +100,28 @@ public class SimpleRayTracer extends RayTracerBase {
      * @param intersection the intersection data
      * @return the color at the intersection point
      */
-    Color calcColorLocalEffects(Intersectable.Intersection intersection) {
-        Double3 diffuse = calcDiffuse(intersection);
-        Double3 specular = calcSpecular(intersection);
+    private Color calcColorLocalEffects(Intersectable.Intersection intersection) {
+        Double3 kd = intersection.material.KD;
+        Double3 ks = intersection.material.KS;
+        int nShininess = intersection.material.Nsh;
 
-        return intersection.lightSource.getIntensity(intersection.point).scale(diffuse.add(specular));
+        double nl = alignZero(intersection.Normal.dotProduct(intersection.DirectionLightSource));
+        double nv = alignZero(intersection.Normal.dotProduct(intersection.directionRay));
+        if (nl * nv <= 0) return Color.BLACK;
+
+        // Diffusive
+        Color diffusive = intersection.lightSource.getIntensity(intersection.point)
+                .scale(kd.scale(nl < 0 ? -nl : nl));
+
+        // Specular
+        Vector r = intersection.DirectionLightSource.subtract(intersection.Normal.scale(2 * nl)).normalize();
+        double minusVR = -intersection.directionRay.dotProduct(r);
+        if (minusVR <= 0) return diffusive; // no specular component
+
+        Color specular = intersection.lightSource.getIntensity(intersection.point)
+                .scale(ks.scale(Math.pow(minusVR, nShininess)));
+
+        return diffusive.add(specular);
     }
 
     /**

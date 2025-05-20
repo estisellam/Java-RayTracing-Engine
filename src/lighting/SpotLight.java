@@ -4,6 +4,8 @@ import primitives.Color;
 import primitives.Point;
 import primitives.Vector;
 
+import static primitives.Util.alignZero;
+
 /**
  * Class representing a spotlight in a 3D scene.
  * A SpotLight is a PointLight with a direction.
@@ -21,14 +23,14 @@ public class SpotLight extends PointLight {
     /**
      * Constructor for SpotLight.
      *
-     * @param d         the direction of the light
+     * @param direction the direction of the light
      * @param intensity the intensity (color) of the light
      * @param position  the position of the light source
 
      */
-    public SpotLight( Color intensity, Point position,Vector d) {
+    public SpotLight(Color intensity, Point position, Vector direction) {
         super(intensity, position);
-        this.direction = d.normalize();
+        this.direction = direction.normalize();
     }
 
     /**
@@ -39,16 +41,20 @@ public class SpotLight extends PointLight {
      */
     @Override
     public Color getIntensity(Point p) {
-        Vector l = getL(p);
-        double dirFactor = Math.max(0, direction.dotProduct(l));
-        if (dirFactor == 0) {
+        Vector l = getL(p).normalize();
+        Vector dir = direction.normalize();
+
+        double projection = alignZero(dir.dotProduct(l));
+        if (projection <= 0) {
             return Color.BLACK;
         }
+        projection = Math.min(projection, 1);
 
-        double focusFactor = Math.pow(dirFactor, narrowBeam);
-        return super.getIntensity(p).scale(focusFactor);
+        double focusFactor = (narrowBeam == 1) ? projection : Math.pow(projection, narrowBeam);
+
+        Color baseIntensity = super.getIntensity(p);
+        return baseIntensity.scale(Math.min(focusFactor, 1));
     }
-
     /**
      * Returns a normalized direction vector from the light to point p.
      *

@@ -142,19 +142,20 @@ public class Ray {
     private static final double DELTA = 0.1;
 
     /**
-     * Constructor that creates a ray from point p in direction dir,
-     *i add this constructor to avoid self-intersection when the ray is used for shadow calculations.
-     * @param p the starting point
-     * @param dir the direction vector (will be normalized)
-     * @param normal the surface normal to apply small shift
+     * Creates a new ray with the head slightly moved along the normal to avoid self-intersection.
+     *
+     * @param head    the original ray start point
+     * @param dir     the direction of the ray
+     * @param normal  the normal vector at the point
+     * @return a new Ray with a biased origin
      */
-    public Ray(Point p, Vector dir, Vector normal) {
-        direction = dir.normalize();
-
-        // Shift the start point along the normal to avoid self-intersection
-        double dot = normal.dotProduct(direction);
+    public static Ray createBiasedRay(Point head, Vector dir, Vector normal) {
+        double dot = normal.dotProduct(dir);
         Vector delta = normal.scale(dot > 0 ? DELTA : -DELTA);
-        this.head = p.add(delta);
+        return new Ray(head.add(delta), dir);
     }
+
+
+
 
 }

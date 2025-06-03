@@ -21,7 +21,60 @@ public class Material {
      */
     public int Nsh=0;
 
+    /**
+     * Transparency attenuation coefficient
+     */
+    public Double3 KT = Double3.ZERO;
 
+
+    /**
+     * Reflection attenuation coefficient
+     */
+    public Double3 KR = Double3.ZERO;
+
+
+    /**
+     * Setter for the transparency coefficient (kT)
+     * @param kT the transparency coefficient
+     * @return the material
+     */
+    public Material setKT(Double3 kT) {
+        this.KT = kT;
+        return this;
+    }
+
+    /**
+     * Setter for the transparency coefficient (kT) with a double value
+     * @param kT the transparency coefficient in double
+     * @return the material
+     */
+
+    public Material setKT(double kT) {
+        this.KT = new Double3(kT);
+        return this;
+    }
+
+
+    /**
+     * Setter for the reflection coefficient (kR)
+     * @param kR the reflection coefficient
+     * @return the material
+     */
+    public Material setKR(Double3 kR) {
+        this.KR = kR;
+        return this;
+    }
+
+    /**
+     * Setter for the reflection coefficient (kR) with a double value
+     * @param kR the reflection coefficient in double
+     * @return the material
+     */
+
+    public Material setKR(double kR) {
+        this.KR = new Double3(kR);
+        return this;
+    }
 
     /**
      * setter for the reflection coefficient with a Double3 value

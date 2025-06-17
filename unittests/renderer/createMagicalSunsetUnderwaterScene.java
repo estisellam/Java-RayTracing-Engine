@@ -739,7 +739,7 @@ class createMagicalSunsetUnderwaterScene {
         cam.renderImage().writeToImage("underwater_FinalImage");
         long end = System.nanoTime();
 
-        System.out.println("case 4-Adaptive + MT: " + (end - start) / 1e9 + " seconds");
+        System.out.println("final " + (end - start) / 1e9 + " seconds");
     }
 }
 

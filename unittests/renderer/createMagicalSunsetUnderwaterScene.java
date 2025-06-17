@@ -6,6 +6,8 @@ import lighting.*;
 import geometries.*;
 import scene.Scene;
 
+import static primitives.Util.isZero;
+
 class createMagicalSunsetUnderwaterScene {
 
 
@@ -28,7 +30,8 @@ class createMagicalSunsetUnderwaterScene {
                                 .setKT(0.6)//transparency
                                 .setKR(0.1)//reflection
                                 .setKS(0.2)//specular
-                                .setShininess(130))//shininess
+                                .setShininess(130)//shininess
+                                .setRefractiveIndex(1.333))// water refractive index
         );
 
         Material rippleMat = new Material().setKT(0.7).setKS(0.3).setShininess(100);
@@ -48,7 +51,7 @@ class createMagicalSunsetUnderwaterScene {
         // === Lighting from Above ===
         // Add a soft blue spotlight from above to simulate sun shining through water
         scene.lights.add(
-                new SpotLight(new Color(100, 170, 255), new Point(0, 0, 100), new Vector(0, 0, -1))
+                new SpotLight(new Color(60, 120, 200), new Point(0, 0, 100), new Vector(0, 0, -1))
                         .setKl(0.0003)
                         .setKq(0.0001)
                         .setNarrowBeam(40)
@@ -231,9 +234,9 @@ class createMagicalSunsetUnderwaterScene {
             );
 // Add a light source on top of each post to make them look like lanterns
             scene.lights.add(
-                    new PointLight(new Color(500, 450, 300), new Point(x, y, zBase + postHeight + 0.25))
-                            .setKl(0.001)
-                            .setKq(0.00005)
+                    new PointLight(new Color(100, 100, 100), new Point(x, y, zBase + postHeight + 0.25))
+                            .setKl(0.002)
+                            .setKq(0.00003)
             );
         }
 
@@ -257,7 +260,7 @@ class createMagicalSunsetUnderwaterScene {
                 )
                         .setEmission(new Color(194, 154, 107))
                         .setMaterial(new Material()
-                                .setKD(0.9)
+                                .setKD(0.5)
                                 .setKS(0.1)
                                 .setShininess(20))
         );
@@ -357,40 +360,68 @@ class createMagicalSunsetUnderwaterScene {
                                 .setMaterial(new Material().setKD(0.7).setKS(0.3).setShininess(80))
                 );
             }
-            // === Clouds ===
-            // Add soft, stylized cloud clusters to frame the sky area above the scene
-            Color cloudColor = new Color(140, 140, 160);
+            Color cloudColor = new Color(220, 120, 200);
             Material cloudMaterial = new Material()
-                    .setKD(0.3)
-                    .setKS(0.3)
-                    .setKT(0.4)  // Partially transparent for cloud softness
-                    .setShininess(20);
+                    .setKD(0.25)
+                    .setKS(0.1)
+                    .setKT(0.4)
+                    .setShininess(15);
+            double z = 16;
 
-            // Main cloud layer
             scene.geometries.add(
-                    new Sphere(new Point(0, -30, 35), 6).setEmission(cloudColor).setMaterial(cloudMaterial),
-                    new Sphere(new Point(8, -30, 35), 5.5).setEmission(cloudColor).setMaterial(cloudMaterial),
-                    new Sphere(new Point(-8, -30, 35), 5.5).setEmission(cloudColor).setMaterial(cloudMaterial),
-                    new Sphere(new Point(16, -30, 35), 4.5).setEmission(cloudColor).setMaterial(cloudMaterial),
-                    new Sphere(new Point(-16, -30, 35), 4.5).setEmission(cloudColor).setMaterial(cloudMaterial)
+                    new Sphere(new Point(-12, 0, z), 3).setEmission(cloudColor).setMaterial(cloudMaterial),
+                    new Sphere(new Point(-9, 1.5, z), 2.5).setEmission(cloudColor).setMaterial(cloudMaterial),
+                    new Sphere(new Point(-15, -1.5, z), 2.5).setEmission(cloudColor).setMaterial(cloudMaterial),
+                    new Sphere(new Point(-7, 2.5, z - 0.5), 1.8).setEmission(cloudColor).setMaterial(cloudMaterial),
+                    new Sphere(new Point(-17, -2.5, z - 0.5), 1.8).setEmission(cloudColor).setMaterial(cloudMaterial),
+                    new Sphere(new Point(-11, 1.5, z + 2.7), 1).setEmission(cloudColor).setMaterial(cloudMaterial),
+                    new Sphere(new Point(-13, -1.5, z + 2.7), 1).setEmission(cloudColor).setMaterial(cloudMaterial),
+                    new Sphere(new Point(-12, 0, z - 2.5), 0.6).setEmission(cloudColor).setMaterial(cloudMaterial)
             );
 
-            // Top puff for vertical dimension
+            Color cloudColor1 = new Color(220, 120, 200);
+            Material cloudMaterial1 = new Material()
+                    .setKD(0.4)
+                    .setKS(0.1)
+                    .setKT(0.4)
+                    .setShininess(15);
+            double z1 = 22;
+
             scene.geometries.add(
-                    new Sphere(new Point(4, -30, 38), 4).setEmission(cloudColor).setMaterial(cloudMaterial),
-                    new Sphere(new Point(-4, -30, 38), 4).setEmission(cloudColor).setMaterial(cloudMaterial)
+                    new Sphere(new Point(16, 1, z1), 3).setEmission(cloudColor1).setMaterial(cloudMaterial1),
+                    new Sphere(new Point(19.5, 2.5, z1), 2.5).setEmission(cloudColor1).setMaterial(cloudMaterial1),
+                    new Sphere(new Point(12, -1.5, z1), 2.5).setEmission(cloudColor1).setMaterial(cloudMaterial1),
+                    new Sphere(new Point(21.5, 1.5, z1), 1.8).setEmission(cloudColor1).setMaterial(cloudMaterial1),
+                    new Sphere(new Point(10, 0.5, z1), 1.8).setEmission(cloudColor1).setMaterial(cloudMaterial1),
+                    new Sphere(new Point(17, 2, z1 + 2.7), 1).setEmission(cloudColor1).setMaterial(cloudMaterial1),
+                    new Sphere(new Point(15, 0, z1 + 2.7), 1).setEmission(cloudColor1).setMaterial(cloudMaterial1),
+                    new Sphere(new Point(16, 1, z1 - 2.5), 0.6).setEmission(cloudColor1).setMaterial(cloudMaterial1)
             );
 
-            // Bottom puff to complete the cloud shape
+            Color cloudColor2 = new Color(180, 140, 255);
+            Material cloudMaterial2 = new Material()
+                    .setKD(0.4)
+                    .setKS(0.1)
+                    .setKT(0.4)
+                    .setShininess(15);
+            double z2 = 18;
+
             scene.geometries.add(
-                    new Sphere(new Point(0, -30, 32.5), 3.5).setEmission(cloudColor).setMaterial(cloudMaterial)
+                    new Sphere(new Point(-10, -8, z2), 3).setEmission(cloudColor2).setMaterial(cloudMaterial2),
+                    new Sphere(new Point(-6.5, -6.5, z2), 2.5).setEmission(cloudColor2).setMaterial(cloudMaterial2),
+                    new Sphere(new Point(-13.5, -9.5, z2), 2.5).setEmission(cloudColor2).setMaterial(cloudMaterial2),
+                    new Sphere(new Point(-10, -5.5, z2 - 0.5), 1.8).setEmission(cloudColor2).setMaterial(cloudMaterial2),
+                    new Sphere(new Point(-15, -10.5, z2 - 0.5), 1.8).setEmission(cloudColor2).setMaterial(cloudMaterial2),
+                    new Sphere(new Point(-16, -7, z2 + 2.7), 1).setEmission(cloudColor2).setMaterial(cloudMaterial2),
+                    new Sphere(new Point(-14, -9, z2 + 2.7), 1).setEmission(cloudColor2).setMaterial(cloudMaterial2),
+                    new Sphere(new Point(-15, -8, z2 - 2.5), 0.6).setEmission(cloudColor2).setMaterial(cloudMaterial2)
             );
         }
         // === Additional Island & Steps ===
         // Add a second sandy island and stone steps to connect it, creating depth
         Color islandColor = new Color(210, 180, 140);
         Material islandMaterial = new Material()
-                .setKD(0.9)
+                .setKD(0.5)
                 .setKS(0.1)
                 .setShininess(15);
 
@@ -445,12 +476,14 @@ class createMagicalSunsetUnderwaterScene {
                             .setMaterial(stepMaterial)
             );
         }
+
+
         // === Lighting Setup ===
 // Add several light sources to create natural underwater atmosphere
 
 // Sunset spotlight – warm light from the top-right corner, simulates sunlight from outside the water
         scene.lights.add(
-                new SpotLight(new Color(200, 175, 150), new Point(100, -100, 150), new Vector(-1, 1, -1))
+                new SpotLight(new Color(120, 100, 90), new Point(100, -100, 150), new Vector(-1, 1, -1))
                         //how much the light fades over distance
                         .setKl(0.001)
                         .setKq(0.0001)
@@ -474,7 +507,7 @@ class createMagicalSunsetUnderwaterScene {
 
 // Side underwater light – blue light coming from the side, adds contrast and detail
         scene.lights.add(
-                new SpotLight(new Color(60, 100, 200), new Point(20, -20, -15), new Vector(-0.5, 1, 1).normalize())
+                new SpotLight(new Color(40, 80, 160), new Point(20, -20, -15), new Vector(-0.5, 1, 1).normalize())
                         .setKl(0.0004)
                         .setKq(0.00005)
                         .setNarrowBeam(25)
@@ -482,12 +515,50 @@ class createMagicalSunsetUnderwaterScene {
 
 // Deep underwater light – dark blue light going up, gives the scene a deep ocean feel
         scene.lights.add(
-                new SpotLight(new Color(30, 80, 200), new Point(0, 0, -10), new Vector(0, 0, 1))
+                new SpotLight(new Color(20, 60, 130), new Point(0, 0, -10), new Vector(0, 0, 1))
                         .setKl(0.0004)
                         .setKq(0.0001)
                         .setNarrowBeam(25)
         );
+        //light from the top, simulates sunlight from outside the water
+        scene.lights.add(
+                new SpotLight(new Color(60, 110, 200), new Point(0, 0, 10), new Vector(0, 0, -1))
+                        .setKl(0.0004)
+                        .setKq(0.00008)
+                        .setNarrowBeam(60) // sharp
+        );
+        scene.lights.add(
+                new DirectionalLight(
+                        new Color(40, 40, 50),        // warm soft light
+                        new Vector(-0.2, -1, -0.3).normalize() // light coming diagonally from above-left
+                )
+        );
+// === Hidden Underwater Energy Tube ===
+// A subtle glowing pipe deep beneath the island
 
+        Tube hiddenTube = new Tube(
+                0.3,
+                new Ray(
+                        new Point(-10, -10, -7), // start point under the sea
+                        new Vector(1, 0.3, 0)    // slightly diagonal in X-Y plane
+                )
+        );
+
+// Material: low diffuse, high specular, some transparency to make it glow from inside
+        hiddenTube.setEmission(new Color(20, 40, 200))  //blue
+                .setMaterial(new Material().setKD(0.05).setKS(0.7).setKT(0).setShininess(200));
+
+// Add to scene
+        scene.geometries.add(hiddenTube);
+
+//Light coming out of the tube
+        scene.lights.add(
+                new SpotLight(new Color(30, 60, 220), new Point(-10, -10, -7), new Vector(0.5, 0.3, 1))
+                        .setKl(0.0006)
+                        .setKq(0.0003)
+                        .setNarrowBeam(10)
+
+        );
         // === Camera & Render ===
         // Build camera, render the full scene and output to image file
         camera.setResolution(600, 600)
@@ -495,6 +566,7 @@ class createMagicalSunsetUnderwaterScene {
                 .enableAA(true)          // ← Turn on Anti-Aliasing -stage 8
                 .setAARays(20) // ← Set number of rays per pixel for AA -stage 8
                 .renderImage()
+                .enableJitter()
                 .writeToImage("oceanUnderwaterScene");
     }
 

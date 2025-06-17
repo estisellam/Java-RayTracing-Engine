@@ -9,6 +9,7 @@ import scene.Scene;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Random;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -25,6 +26,21 @@ public class Camera implements Cloneable {
      For example: 81 means 9x9 grid of rays inside each pixel*/
     private int aaRays = 81;
 
+    // This variable decides if we want to use jitter (random small changes) -stage 8 -bonus
+    private boolean useJitter = false;
+
+    /**
+     * Turn on jitter mode.
+     * Jitter adds small random offsets to rays to make the image smoother.
+     * Without it, rays go through fixed points. With jitter, they move a bit randomly.
+     * This helps to reduce sharp edges and make the image more natural.
+     *
+     * @return the camera (so we can chain commands) -stage 8 -bonus
+     */
+    public Camera enableJitter() {
+        this.useJitter = true; // now the camera will use jitter
+        return this; // return the camera so we can continue building it
+    }
 
     /**
      * Camera location in 3D space.
@@ -380,50 +396,54 @@ public class Camera implements Cloneable {
         return this;
     }
 
-    /**
-     * Generate a list of rays inside a single pixel for anti-aliasing.
-     * The rays go from the camera through different positions in the pixel.
-     *
-     * @param nX number of pixels in the X axis (width)
-     * @param nY number of pixels in the Y axis (height)
-     * @param j  column index of the pixel
-     * @param i  row index of the pixel
-     * @return list of rays inside the pixel for super-sampling -stage 8
-     */
     public List<Ray> constructAAbeamThroughPixel(int nX, int nY, int j, int i) {
         List<Ray> rays = new ArrayList<>();
 
+        // how many rays per row and per column (like small grid inside pixel)
         int gridSize = (int) Math.sqrt(aaRays);
+
+        // pixel size on the screen
         double rX = VpWidth / nX;
         double rY = VpHeight / nY;
 
-        Point pc = location.add(to.scale(VpDistance))
-                .add(right.scale((j - (nX - 1) / 2.0) * rX))
-                .add(up.scale(-1 * (i - (nY - 1) / 2.0) * rY));
+        // center of the pixel
+        Point pc = location.add(to.scale(VpDistance))  // go forward
+                .add(right.scale((j - (nX - 1) / 2.0) * rX)) // move right or left
+                .add(up.scale(-1 * (i - (nY - 1) / 2.0) * rY)); // move up or down
 
+        // size of one tiny square inside pixel
         double subRx = rX / gridSize;
         double subRy = rY / gridSize;
 
+        Random rand = new Random(); // for random numbers
+
+        // go over each small square (sub-pixel)
         for (int row = 0; row < gridSize; row++) {
             for (int col = 0; col < gridSize; col++) {
-                try {
-                    double xOffset = (col + 0.5) * subRx - rX / 2;
-                    double yOffset = (row + 0.5) * subRy - rY / 2;
 
-                    Point pij = pc.add(right.scale(xOffset)).add(up.scale(-yOffset));
+                // where to shoot the ray inside the pixel
+                double xOffset = (col + 0.5) * subRx - rX / 2;
+                double yOffset = (row + 0.5) * subRy - rY / 2;
 
-                    Vector dir = pij.subtract(location);
-                    if (!isZero(dir.lengthSquared())) {
-                        rays.add(new Ray(location, dir));
-                    }
-                } catch (IllegalArgumentException e) {
-                    // Skip ray if it causes a zero vector or other error
+                // if jitter is ON – add random shift
+                if (useJitter) {
+                    double jitterX = (rand.nextDouble() - 0.5) * subRx; // random shift in x
+                    double jitterY = (rand.nextDouble() - 0.5) * subRy; // random shift in y
+                    xOffset += jitterX;
+                    yOffset += jitterY;
+                }
+
+                // final point we shoot to
+                Point pij = pc.add(right.scale(xOffset)).add(up.scale(-yOffset));
+
+                // make a ray from camera to this point
+                Vector dir = pij.subtract(location);
+                if (!isZero(alignZero(dir.lengthSquared()))) {
+                    rays.add(new Ray(location, dir));
                 }
             }
-
-
         }
-        return rays;
 
+        return rays;
     }
 }

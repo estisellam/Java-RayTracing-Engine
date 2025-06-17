@@ -288,14 +288,20 @@ public class SimpleRayTracer extends RayTracerBase {
         Double3 kT = intersection.material.KT;
         Double3 kkt = k.product(kT);
         if (!kkt.lowerThan(MIN_CALC_COLOR_K)) {
-            Ray refractedRay = Ray.createBiasedRay(point, v, n);  // same direction, bias with normal
+            double n1 = 1.0; // air
+            double n2 = intersection.material.getRefractiveIndex();
 
-            List<Intersectable.Intersection> refractedIntersections = scene.geometries.calculateIntersections(refractedRay);
-            if (refractedIntersections != null) {
-                refractedIntersections.removeIf(i -> i.geometry == intersection.geometry); // סינון הקריטי
-                Intersectable.Intersection refractedIntersection = refractedRay.findClosestIntersection(refractedIntersections);
-                if (refractedIntersection != null) {
-                    color = color.add(calcColor(refractedIntersection, refractedRay, level - 1, kkt).scale(kT));
+            Vector refractedDir = calculateRefractedDirection(intersection.normal, v, n1, n2);
+
+            if (refractedDir != null) {
+                Ray refractedRay = Ray.createBiasedRay(point, refractedDir, intersection.normal);
+                List<Intersectable.Intersection> refractedIntersections = scene.geometries.calculateIntersections(refractedRay);
+                if (refractedIntersections != null) {
+                    refractedIntersections.removeIf(i -> i.geometry == intersection.geometry);
+                    Intersectable.Intersection refractedIntersection = refractedRay.findClosestIntersection(refractedIntersections);
+                    if (refractedIntersection != null) {
+                        color = color.add(calcColor(refractedIntersection, refractedRay, level - 1, kkt).scale(kT));
+                    }
                 }
             }
         }
@@ -361,5 +367,58 @@ public class SimpleRayTracer extends RayTracerBase {
 
         // average = total / number of rays
         return totalColor.reduce(rays.size());
+    }
+
+    /**
+     * Calculates the refracted direction based on Snell's Law.
+     *
+     * @param normal the normal vector at the intersection point
+     * @param dir    the incoming direction vector of the ray
+     * @param n1     the index of refraction of the medium the ray is coming from
+     * @param n2     the index of refraction of the medium the ray is entering
+     * @return the refracted direction vector, or null if total internal reflection occurs
+     */
+    private Vector calculateRefractedDirection(Vector normal, Vector dir, double n1, double n2) {
+        // Calculate the cosine of the angle between normal and incoming direction
+        double cosI = -normal.dotProduct(dir);
+
+        // Ratio of indices of refraction
+        double n1OverN2 = n1 / n2;
+
+        // Use Snell's Law to check for total internal reflection
+        double sin2T = n1OverN2 * n1OverN2 * (1 - cosI * cosI);
+        if (sin2T > 1) return null; // total internal reflection: no refraction
+
+        // Cosine of the transmitted angle
+        double cosT = Math.sqrt(1 - sin2T);
+
+        // Compute the scale factors for the normal and the direction vectors
+        double scaleNormal = n1OverN2 * cosI - cosT;
+        double scaleDir = n1OverN2;
+
+        // Scale normal only if scaleNormal is not zero (to avoid creating zero vector)
+        Vector scaledN = isZero(scaleNormal) ? null : normal.scale(scaleNormal);
+
+        // Scale dir only if scaleDir is not zero (to avoid creating zero vector)
+        Vector scaledD = isZero(scaleDir) ? null : dir.scale(scaleDir);
+
+        // If both vectors are null (i.e. zero), return null (invalid refraction)
+        if (scaledN == null && scaledD == null) return null;
+
+        // Add the two scaled vectors
+        Vector refracted;
+        if (scaledN == null) {
+            refracted = scaledD;
+        } else if (scaledD == null) {
+            refracted = scaledN;
+        } else {
+            refracted = scaledN.add(scaledD);
+        }
+
+        // If the resulting vector is still zero, return null
+        if (isZero(refracted.lengthSquared())) return null;
+
+        // Return the normalized refracted direction
+        return refracted.normalize();
     }
 }

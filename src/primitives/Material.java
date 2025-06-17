@@ -19,7 +19,7 @@ public class Material {
     /**
      * Shininess coefficient
      */
-    public int Nsh=0;
+    public int Nsh = 0;
 
     /**
      * Transparency attenuation coefficient
@@ -32,9 +32,18 @@ public class Material {
      */
     public Double3 KR = Double3.ZERO;
 
+    /**
+     * Refractive index of the material
+     * Default is 1.0 (air)
+     * This value is used in refraction calculations.
+     * to make it more realistic like glass or water the ray will be bent the value should be greater than 1.0 in water it is 1.33 and in glass it is 1.5
+     */
+    private double refractiveIndex = 1.0;
+
 
     /**
      * Setter for the transparency coefficient (kT)
+     *
      * @param kT the transparency coefficient
      * @return the material
      */
@@ -45,6 +54,7 @@ public class Material {
 
     /**
      * Setter for the transparency coefficient (kT) with a double value
+     *
      * @param kT the transparency coefficient in double
      * @return the material
      */
@@ -57,6 +67,7 @@ public class Material {
 
     /**
      * Setter for the reflection coefficient (kR)
+     *
      * @param kR the reflection coefficient
      * @return the material
      */
@@ -67,6 +78,7 @@ public class Material {
 
     /**
      * Setter for the reflection coefficient (kR) with a double value
+     *
      * @param kR the reflection coefficient in double
      * @return the material
      */
@@ -78,52 +90,55 @@ public class Material {
 
     /**
      * setter for the reflection coefficient with a Double3 value
+     *
      * @param Kd point in 3D space
      * @return the material
      */
-    public Material setKD(Double3 Kd)
-    {
+    public Material setKD(Double3 Kd) {
         this.KD = Kd;
         return this;
     }
 
     /**
      * setter for the reflection coefficient with a double value
+     *
      * @param Kd the reflection coefficient in double
      * @return the material
      */
-    public Material setKD(double Kd)
-    {
+    public Material setKD(double Kd) {
         this.KD = new Double3(Kd);
         return this;
     }
+
     /**
      * setter for the reflection coefficient with a Double3 value
+     *
      * @param Ks point in 3D space
      * @return the material
      */
-    public Material setKS(Double3 Ks)
-    {
+    public Material setKS(Double3 Ks) {
         this.KS = Ks;
         return this;
     }
+
     /**
      * setter for the reflection coefficient with a double value
+     *
      * @param Ks the reflection coefficient in double
      * @return the material
      */
-    public Material setKS(double Ks)
-    {
+    public Material setKS(double Ks) {
         this.KS = new Double3(Ks);
         return this;
     }
+
     /**
      * setter for the shininess coefficient
+     *
      * @param Nsh the shininess coefficient
      * @return the material
      */
-    public Material setShininess(int Nsh)
-    {
+    public Material setShininess(int Nsh) {
         this.Nsh = Nsh;
         return this;
     }
@@ -131,6 +146,7 @@ public class Material {
 
     /**
      * setter for the diffusion coefficient with a Double3 value
+     *
      * @param ka point in 3D space
      * @return the material
      */
@@ -138,13 +154,36 @@ public class Material {
         this.KA = ka;
         return this;
     }
+
     /**
      * setter for the diffusion coefficient with a double value
+     *
      * @param ka the diffusion coefficient in double
      * @return the material
      */
     public Material setKA(double ka) {
         this.KA = new Double3(ka);
         return this;
+    }
+
+    /**
+     * setter for the refractive index of the material
+     *
+     * @param n the refractive index
+     * @return the material
+     */
+    public Material setRefractiveIndex(double n) {
+        this.refractiveIndex = n;
+        return this;
+    }
+
+    /**
+     * Getter for the refractive index of the material
+     *
+     * @return the refractive index
+     */
+
+    public double getRefractiveIndex() {
+        return refractiveIndex;
     }
 }

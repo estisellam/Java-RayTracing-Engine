@@ -720,5 +720,26 @@ class createMagicalSunsetUnderwaterScene {
 
         System.out.println("case 4-Adaptive + MT: " + (end - start) / 1e9 + " seconds");
     }
+
+    // Final image for the underwater scene with adaptive AA and multithreading and all features enabled
+    @Test
+    void finalPicture() {
+        buildUnderwaterScene();
+
+        camera.setResolution(1000, 1000)
+                .setRayTracer(scene, RayTracerType.MULTI_THREADED);
+
+        Camera cam = camera.build()
+                .enableAdaptive(true)
+                .setAdaptiveDepth(5)
+                .enableAA(true)
+                .enableJitter();
+
+        long start = System.nanoTime();
+        cam.renderImage().writeToImage("underwater_FinalImage");
+        long end = System.nanoTime();
+
+        System.out.println("case 4-Adaptive + MT: " + (end - start) / 1e9 + " seconds");
+    }
 }
 

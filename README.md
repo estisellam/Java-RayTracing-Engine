@@ -1,89 +1,70 @@
+
 # Java Ray Tracing Engine
 
-## Overview
-A 3D ray tracing engine implemented in Java, designed to render complex scenes with realistic lighting and advanced visual effects.
+A 3D rendering engine built in **Java**, featuring realistic lighting, advanced sampling techniques, and multithreaded rendering.
 
-The project focuses on building a full rendering pipeline from scratch, combining geometric modeling, light simulation, and performance optimization techniques.
+Developed as an academic software engineering project, focusing on **computational geometry, algorithms, concurrency, and performance optimization**.
 
----
+## Render Preview
 
-## Preview
-
-![Magical Underwater Scene](images/oceanUnderwaterScene.png)
-
----
+![Underwater Scene](images/oceanUnderwaterScene.png)
 
 ## Key Features
 
-- Full ray tracing pipeline implementation  
-- Physically-inspired lighting model (reflection, refraction)  
-- Support for complex geometric scenes  
-- Transparent and reflective materials  
-- Advanced sampling techniques for image quality improvement  
-
----
-
-## Rendering Techniques
-
-### Anti-Aliasing
-Implemented supersampling (up to 81 rays per pixel) to reduce aliasing and improve edge smoothness.
-
-### Adaptive Super Sampling
-Adaptive subdivision of pixels based on color variance, reducing computation while maintaining high visual fidelity.
-
-### Jittering
-Randomized ray offsets to simulate natural visual effects such as soft shadows and smooth transitions.
-
-### Refraction
-Simulation of light behavior through transparent materials using refractive indices.
-
----
-
-## Performance Optimization
-
-### Multithreading
-Parallelized rendering using Java ExecutorService, distributing workload across CPU cores.
-
-### Results
-- Reduced runtime by up to ~97% compared to naive rendering  
-- Significant improvement from combining adaptive sampling and parallel execution  
-
----
+- **Ray Tracing:** Ray–geometry intersections and realistic lighting calculations.
+- **Reflection & Refraction:** Support for reflective and transparent materials.
+- **Anti-Aliasing:** Supersampling with up to 81 rays per pixel.
+- **Adaptive Super Sampling:** Reduces redundant ray calculations while preserving visual quality.
+- **Soft Shadows & Jittering:** Improved visual realism through randomized sampling.
+- **Multithreading:** Parallel rendering using Java's `ExecutorService`.
 
 ## Architecture
 
-The engine is designed with clear separation of responsibilities:
+The engine follows a modular rendering pipeline:
 
-- Scene construction and object modeling  
-- Ray generation and tracing  
-- Lighting and shading calculations  
-- Rendering pipeline orchestration  
+```text
+Scene & Camera
+      ↓
+Ray Generation
+      ↓
+Geometry Intersections
+      ↓
+Lighting & Materials
+      ↓
+Pixel Sampling
+      ↓
+Rendered Image
+```
 
-The design emphasizes modularity and extensibility.
+## Performance Optimization
 
----
+Implemented two complementary optimization techniques:
 
-## Technologies
+- **Parallel Rendering:** Distributes rendering tasks across CPU cores using `ExecutorService`.
+- **Adaptive Sampling:** Concentrates ray calculations in visually complex regions.
 
-- Java  
-- IntelliJ IDEA  
-- Java Concurrency (ExecutorService)  
+Performance can be evaluated by comparing rendering times for identical scenes and resolutions, using equivalent image-quality settings.
 
----
+*Note: Quantified speedup results are pending reproducible benchmark measurements.*
 
-## Key Learnings
+## Tech Stack
 
-- Building a rendering engine from scratch  
-- Applying performance optimizations to computationally intensive systems  
-- Trade-offs between rendering quality and runtime  
-- Practical use of multithreading  
-- Designing scalable and modular systems  
+**Java · OOP · ExecutorService · Computational Geometry · Multithreading**
 
----
+## Getting Started
 
-## How to Run
+```bash
+git clone https://github.com/estisellam/Java-RayTracing-Engine.git
+cd Java-RayTracing-Engine
+```
 
-1. Clone the repository  
-2. Open in IntelliJ IDEA  
-3. Run the main rendering class  
-4. Output image will be generated  
+Open the project in **IntelliJ IDEA**, configure a compatible JDK, and run a scene-rendering entry point or test.
+
+*The exact entry point and JDK version are pending local verification.*
+
+## Engineering Focus
+
+- Designing modular rendering components.
+- Balancing image quality and computational cost.
+- Applying parallel programming to CPU-intensive workloads.
+- Optimizing algorithms through adaptive computation.
